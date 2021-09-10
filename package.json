@@ -1,0 +1,23 @@
+{
+  "name": "@drashland/accio",
+  "version": "0.0.1",
+  "description": "An easy way to search for deeply nested data in large datasets",
+  "main": "./lib/cjs/accio.js",
+  "types": "./lib/cjs/accio.d.ts",
+  "repository": "git@github.com:drashland/accio.git",
+  "author": "Drash Land",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:local": "yarn build:cjs && cp package.cjs.json ./dist/package.json && cd example_apps/cjs/ && yarn install --force && cd -"
+  },
+  "devDependencies": {
+    "@types/jest": "27.x",
+    "@types/node": "16.x",
+    "jest": "27.x",
+    "ts-jest": "27.x",
+    "ts-node": "10.x",
+    "typescript": "4.x"
+  }
+}
