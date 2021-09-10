@@ -12,7 +12,7 @@ An easy way to search for deeply nested data in large datasets
     $ npm init -y
     ```
 
-    _Note: `-y` skips all of the prompts.
+    _Note: `-y` skips all of the prompts._
 
 2. Install Accio.
 
