@@ -132,3 +132,29 @@ An easy way to search for deeply nested data in large datasets
     ```
     ["Fix issue with first() not beeing callable on nested arrays."]
     ```
+
+## API
+
+`.object(field: string)`
+
+Get a field that is an object. You call call `object`, `array()` or `field()` on this object.
+
+`.array(field: string)`
+
+Get a field that is an array. You can call `find()`, `findOne()`, or `first()` on this array.
+
+`.find(fields: {[key: string]: string | FieldType})`
+
+Find objects in an array that match the fields. For example, `.find({ id: 1 })` will find and return all objects in an array with an `id` of `1`.
+
+`.findOne(fields: {[key: string]: string | FieldType})`
+
+Find the first object that matches the fields. For example, `.findOne({ id: 1 })` will find and return the first object that has an `id` of `1`.
+
+`.first()`
+
+This can only be called after `.array()`, `find()`, and `findOne()`. It gets the first item from the array.
+
+`.field()`
+
+Get a field's value in an object. For example, calling `object("test").field("hello")` on `{ test: { hello: "world" } }` will return `world`.
