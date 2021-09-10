@@ -137,7 +137,7 @@ An easy way to search for deeply nested data in large datasets
 
 `.object(field: string)`
 
-Get a field that is an object. You call call `object`, `array()` or `field()` on this object.
+Get a field that is an object. You can call `object`, `array()` or `field()` on this object.
 
 `.array(field: string)`
 
