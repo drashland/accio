@@ -74,7 +74,7 @@ export class Collection<T> {
         }
 
         if (typeof value == "string") {
-          results.push(item[key].trim() == value.trim());
+          results.push(item[key] == value.trim());
           continue;
         }
 
