@@ -16,60 +16,46 @@ export class Document<T> {
     return new Collection(this.#data[input]);
   }
 
-  object<T>(input: string): CollectionObject<T> {
-    return new CollectionObject(this.#data[input]);
-  }
-}
-
-export class CollectionObject<T> {
-  #collection: T;
-
-  constructor(collection: T) {
-    this.#collection = collection;
-  }
-
-  public field(input: string): T[keyof T] {
-    return this.#collection[input];
-  }
-
-  public array<T>(input: string): Collection<T> {
-    return new Collection(this.#collection[input]);
-  }
-
-  public object<T>(input: string): CollectionObject<T> {
-    return new CollectionObject(this.#collection[input]);
-  }
-
-  toString(): string {
-    return JSON.stringify(this.#collection);
+  object<T>(input: string): Collection<T> {
+    return new Collection(this.#data[input]);
   }
 }
 
 export class Collection<T> {
-  #collection: T[];
+  #data: T[];
+  #original_object_type: string;
 
   constructor(collection: T) {
     if (Array.isArray(collection)) {
-      this.#collection = collection;
+      this.#original_object_type = "array";
+      this.#data = collection;
     } else {
-      this.#collection = [collection];
+      this.#original_object_type = "non-array";
+      this.#data = [collection];
     }
   }
 
-  public first(): CollectionObject<T> {
-    return new CollectionObject(this.#collection[0]);
+  get<T>(): T {
+    if (this.#original_object_type == "non-array") {
+      return this.#data[0] as unknown as T;
+    }
+    return this.#data as unknown as T;
+  }
+
+  public first(): Collection<T> {
+    return new Collection<T>(this.#data[0]);
   }
 
   public array<T>(input: string): Collection<T> {
-    return new Collection(this.#collection[input]);
+    return new Collection<T>(this.#data[0][input]);
   }
 
-  public object<T>(input: string): CollectionObject<T> {
-    return new CollectionObject(this.#collection[input]);
+  public object<T>(input: string): Collection<T> {
+    return new Collection<T>(this.#data[0][input]);
   }
 
-  public find(fields: {[key: string]: string | FieldType}): this {
-    this.#collection = this.#collection.filter((item: T) => {
+  public find(fields: {[key: string]: unknown}): this {
+    this.#data = this.#data.filter((item: T) => {
       let results = [];
 
       // Test the item
@@ -92,49 +78,13 @@ export class Collection<T> {
           continue;
         }
 
-        if ((value as unknown) instanceof FieldType) {
-          const fieldType = (value as FieldType).type;
-
-          switch (fieldType) {
-            case "array":
-              results.push(Array.isArray(item[key]));
-              break;
-            case "boolean":
-              results.push(typeof item[key] == "boolean");
-              break;
-            case "date":
-              try {
-                if (
-                  typeof item[key] !== "boolean"
-                  && typeof item[key] !== "number"
-                  && typeof item[key] !== "object"
-                ) {
-                  const date = (new Date(item[key])).toISOString();
-                  results.push(true);
-                } else {
-                  results.push(false);
-                }
-              } catch (error) {
-                results.push(false);
-              }
-              break;
-            case "number":
-              results.push(typeof item[key] == "number");
-              break;
-            case "object":
-              results.push(
-                typeof item[key] == "object"
-                && !Array.isArray(item[key])
-              );
-              break;
-            case "string":
-              results.push(typeof item[key] == "string");
-              break;
-            default:
-              results.push(false);
-              break;
-          }
-
+        if (Array.isArray(value) && value[0] instanceof FieldType) {
+          results = this.#findBasedOnFieldTypes(
+            results,
+            item,
+            key,
+            value
+          );
           continue;
         }
 
@@ -142,16 +92,86 @@ export class Collection<T> {
       }
 
       const test = (results.indexOf(false) == -1)
-        && (results.length == Object.keys(fields).length);
+        && (results.length >= Object.keys(fields).length);
       return test;
     });
 
     return this;
   }
 
-  public findOne(fields: {[key: string]: string | FieldType }): CollectionObject<T> {
+  #findBasedOnFieldTypes(
+    results: boolean[],
+    item: T,
+    key: string,
+    fieldTypes: FieldType[]
+  ): boolean[] {
+    fieldTypes.forEach((fieldType: FieldType) => {
+      let result = false;
+
+      switch (fieldType.type) {
+        case "array":
+          result = Array.isArray(item[key]);
+          break;
+        case "boolean":
+          result = typeof item[key] == "boolean";
+          break;
+        case "date":
+          result = this.#fieldTypeIsDate(item[key]);
+          break;
+        case "number":
+          result = typeof item[key] == "number";
+          break;
+        case "not_date":
+          result = !this.#fieldTypeIsDate(item[key]);
+          break;
+        case "object":
+          result = this.#fieldTypeIsObject(item[key]);
+          break;
+        case "string":
+          result = typeof item[key] == "string";
+          break;
+        default:
+          result = false;
+          break;
+      }
+
+      results.push(result);
+    });
+
+    return results;
+  }
+
+  #fieldTypeIsObject(field: unknown): boolean {
+    return typeof field == "object" && !Array.isArray(field);
+  }
+
+  #fieldTypeIsDate(field: unknown): boolean {
+    try {
+      if (
+        typeof field !== "boolean"
+        && typeof field !== "number"
+        && typeof field !== "object"
+      ) {
+        const date = (new Date(field as string)).toISOString();
+        return true;
+      }
+    } catch (_error) {
+      // Do nothing.
+    }
+
+    return false;
+  }
+
+  public findOne<T>(fields: {[key: string]: unknown }): Collection<T> {
     this.find(fields);
-    return new CollectionObject(this.#collection[0]);
+    return new Collection<T>(this.#data[0] as unknown as T);
+  }
+
+  public stringify(): string {
+    if (this.#original_object_type == "non-array") {
+      return JSON.stringify(this.#data[0] as unknown as T);
+    }
+    return JSON.stringify(this.#data as unknown as T);
   }
 }
 
