@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "module": "esnext",
     "target": "es2015",
     "rootDir": "./",
     "declaration": true,
