@@ -9,7 +9,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build:cjs": "tsc --project tsconfig.cjs.json"
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build": "yarn build:cjs"
   },
   "devDependencies": {
     "@types/jest": "27.x",
