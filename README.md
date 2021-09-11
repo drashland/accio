@@ -4,7 +4,13 @@ An easy way to search for deeply nested data in large datasets
 
 ## Quickstart
 
-### Quickstart: Node - JavaScript
+The below quickstart uses Node and TypeScript. If this quickstart does not fit your needs, check out the other guides below:
+
+* [Quickstart: Node - JavaScript](./docs/quickstart/node_javascript.md)
+* [Quickstart: Deno - JavaScript](./docs/quickstart/deno_javascript.md)
+* [Quickstart: Deno - TypeScript](./docs/quickstart/deno_typescript.md)
+
+### Quickstart: Node - TypeScript
 
 1. Initialize your project as a Node project.
 
@@ -14,147 +20,66 @@ An easy way to search for deeply nested data in large datasets
 
     _Note: `-y` skips all of the prompts._
 
-2. Install Accio.
+2. Install Accio and the `ts-node` CLI.
 
     ```
     $ npm install @drashland/accio
+    $ npm install -g ts-node
     ```
 
-3. Create your `dataset.json` file.
+3. Create your `data.json` file. You can copy the [`example_data.json`](./example_data.json) file from this repository.
 
-    ```json
-    {
-      "project": "Accio",
-      "type": "Package",
-      "organization": "Drash Land",
-      "versions": [
-        {
-          "name": "v0.0.3",
-          "release_notes": [
-            {
-              "title": "Features",
-              "body": [
-                "Add support for arrays.",
-                "Add support for objects."
-              ]
-            },
-            {
-              "title": "Bug Fixes",
-              "body": [
-                "Fix issue with date objects not being correctly validated.",
-                "Fix issue with collections not being stored as arrays."
-              ]
-            }
-          ]
-        },
-        {
-          "name": "v0.0.2",
-          "release_notes": [
-            {
-              "title": "Features",
-              "body": [
-                "Add ability to find an object in an array based on a field's type."
-              ]
-            },
-            {
-              "title": "Bug Fixes",
-              "body": [
-                "Fix issue with first() not being callable on nested arrays."
-              ]
-            }
-          ]
-        }
-        {
-          "name": "v0.0.1",
-          "release_notes": [
-            {
-              "title": "Features",
-              "body": [
-                "Add support for booleans.",
-                "Add support for dates.",
-                "Add support for numbers.",
-                "Add support for strings."
-              ]
-            }
-          ]
-        }
-      ],
-      "maintainers": [
-        {
-          "name": "Eric"
-        },
-        {
-          "name": "Breno"
-        },
-        {
-          "name": "Ed"
-        },
-        {
-          "name": "Sara"
-        }
-      ]
-    }
-    ```
+4. Create your `app.ts` file.
 
-4. Create your `app.js` file and `require` your `dataset.json` file.
-
-    ```javascript
-    const accio = require("accio");
-    const fs = require("fs");
-    const json = fs.readFileSync("./dataset.json", "utf-8");
+    ```typescript
+    import { accio } from "@drashland/accio";
+    import { readFileSync } from "fs";
     
-    const data = accio(json);
+    const data = readFileSync("./data.json", "utf-8");
+    const doc = accio(data);
     
-    // Try to find the `body` in the `release_notes` of an object with `name: "v0.0.2"`
-    // in the `versions` of the dataset
-    const result = data
-      .array("versions")
-      .findOne({
-        name: "v0.0.2",
+    const result = doc
+      .array("versions")       // Target the array named "versions"
+      .findOne({               // In the array, find one object that has a name field ...
+        name: "v0.0.3",        // ... with the value of "v0.0.3"
       })
-      .array("release_notes")
-      .findOne({
-        title: "Bug Fixes",
+      .array("release_notes")  // In the object, target the array named "release_notes"
+      .findOne({               // In the array, find one object that has a title field ...
+        title: "Bug Fixes",    // ... with the value of "Bug Fixes"
       })
-      .field("body")
+      .array("body")           // In the object, target the array named "body"
+      .first()                 // Target the first object in the array
       
-    console.log(result);
+    // Create the typing for the result
+    type SomeType = {
+      type: string;
+      text: string;
+    };
+    
+    // Use the `.get()` call and pass in the typing to get a typed result
+    const typedResult = result.get<SomeType>();
+    
+    console.log(typedResult.type);
+    console.log(typedResult.text);
     ```
 
-5. Run your `app.js` file.
+5. Run your `app.ts` file.
 
     ```
-    $ node app.js
+    $ ts-node app.ts
     ```
-    
-    You should see the following output:
-    
+
+    You should see the following:
+
     ```
-    ["Fix issue with first() not beeing callable on nested arrays."]
+    bullet
+    Fix issue with date objects not being correctly validated.
     ```
 
 ## API
 
-`.object(field: string)`
+View the full API documentation [here](./docs/api.md).
 
-Get a field that is an object. You can call `object`, `array()` or `field()` on this object.
+---
 
-`.array(field: string)`
-
-Get a field that is an array. You can call `find()`, `findOne()`, or `first()` on this array.
-
-`.find(fields: {[key: string]: string | FieldType})`
-
-Find objects in an array that match the fields. For example, `.find({ id: 1 })` will find and return all objects in an array with an `id` of `1`.
-
-`.findOne(fields: {[key: string]: string | FieldType})`
-
-Find the first object that matches the fields. For example, `.findOne({ id: 1 })` will find and return the first object that has an `id` of `1`.
-
-`.first()`
-
-This can only be called after `.array()`, `find()`, and `findOne()`. It gets the first item from the array.
-
-`.field()`
-
-Get a field's value in an object. For example, calling `object("test").field("hello")` on `{ test: { hello: "world" } }` will return `world`.
+Want to contribute? Follow the Contributing Guidelines [here](https://github.com/drashland/.github/blob/master/CONTRIBUTING.md). All code is released under the [MIT License](https://github.com/drashland/deno-drash/blob/master/LICENSE).
