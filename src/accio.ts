@@ -12,4 +12,5 @@ export const Types = {
   Object: new FieldType("object"),
   Number: new FieldType("number"),
   String: new FieldType("string"),
+  NotDate: new FieldType("not_date"),
 };
