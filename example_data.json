@@ -1,0 +1,85 @@
+{
+  "project": "Accio",
+  "versions": [
+    {
+      "name": "v0.0.3",
+      "release_notes": [
+        {
+          "title": "Features",
+          "body": [
+            {
+              "type": "bullet",
+              "text": "Add support for arrays."
+            },
+            {
+              "type": "bullet",
+              "text": "Add support for objects."
+            }
+          ]
+        },
+        {
+          "title": "Bug Fixes",
+          "body": [
+            {
+              "type": "bullet",
+              "text": "Fix issue with date objects not being correctly validated."
+            },
+            {
+              "type": "bullet",
+              "text": "Fix issue with collections not being stored as arrays."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "v0.0.2",
+      "release_notes": [
+        {
+          "title": "Features",
+          "body": [
+            {
+              "type": "bullet",
+              "text": "Add ability to find an object in an array based on a field's type."
+            }
+          ]
+        },
+        {
+          "title": "Bug Fixes",
+          "body": [
+            {
+              "type": "bullet",
+              "text": "Fix issue with first() not being callable on nested arrays."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "v0.0.1",
+      "release_notes": [
+        {
+          "title": "Features",
+          "body": [
+            {
+              "type": "bullet",
+              "text": "Add support for booleans."
+            },
+            {
+              "type": "bullet",
+              "text": "Add support for dates."
+            },
+            {
+              "type": "bullet",
+              "text": "Add support for numbers."
+            },
+            {
+              "type": "bullet",
+              "text": "Add support for strings."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
