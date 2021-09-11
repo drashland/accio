@@ -304,7 +304,7 @@ describe("document.ts", () => {
       expect(onObjectField[1]).toStrictEqual("Nested 3 deep object");
     });
 
-    it("handles arrays: complex (Types.String)", () => {
+    it("handles arrays: complex (Types.String && Types.NotDate)", () => {
       const onStringField = doc
       .array("arrays")
       .find({
