@@ -5,7 +5,6 @@ import { Collection } from "./collection";
  * The term "documents" was taken from MongoDB.
  */
 export class Document<T> {
-
   #data: T;
 
   //////////////////////////////////////////////////////////////////////////////

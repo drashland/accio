@@ -9,4 +9,3 @@ export class FieldType {
     return this.#type;
   }
 }
-

@@ -63,7 +63,7 @@ const data = JSON.stringify({
                 {
                   2: [
                     {
-                      1: "Nested 5 deep"
+                      1: "Nested 5 deep",
                     },
                   ],
                 },
@@ -80,7 +80,7 @@ const data = JSON.stringify({
             {
               2: [
                 {
-                  1: "Nested 5 deep array"
+                  1: "Nested 5 deep array",
                 },
               ],
             },
@@ -94,11 +94,11 @@ const data = JSON.stringify({
         {
           2: [
             {
-              1: "Nested 3 deep boolean"
-            }
-          ]
-        }
-      ]
+              1: "Nested 3 deep boolean",
+            },
+          ],
+        },
+      ],
     },
     {
       4: "2021-09-10T00:57:00.474Z",
@@ -106,11 +106,11 @@ const data = JSON.stringify({
         {
           2: [
             {
-              1: ["Nested 3 deep date"]
-            }
-          ]
-        }
-      ]
+              1: ["Nested 3 deep date"],
+            },
+          ],
+        },
+      ],
     },
     {
       4: 4.4,
@@ -118,11 +118,11 @@ const data = JSON.stringify({
         {
           2: [
             {
-              1: "Nested 3 deep number"
-            }
-          ]
-        }
-      ]
+              1: "Nested 3 deep number",
+            },
+          ],
+        },
+      ],
     },
     {
       4: {},
@@ -130,11 +130,11 @@ const data = JSON.stringify({
         {
           2: [
             {
-              1: "Nested 3 deep object"
-            }
-          ]
-        }
-      ]
+              1: "Nested 3 deep object",
+            },
+          ],
+        },
+      ],
     },
     {
       4: "some string",
@@ -142,13 +142,13 @@ const data = JSON.stringify({
         {
           2: [
             {
-              1: ["Nested 3 deep array some string"]
-            }
-          ]
-        }
-      ]
+              1: ["Nested 3 deep array some string"],
+            },
+          ],
+        },
+      ],
     },
-  ]
+  ],
 });
 
 const doc = new Document(data);
@@ -158,16 +158,16 @@ describe("document.ts", () => {
     it("handles objects: nested 1 deep", () => {
       const result = doc
         .object("objects")
-        .get<{1: string}>();
-      expect(result[1]).toBe("Nested 1 deep")
+        .get<{ 1: string }>();
+      expect(result[1]).toBe("Nested 1 deep");
     });
 
     it("handles objects: nested 2 deep", () => {
       const result = doc
         .object("objects")
         .object("2")
-        .get<{1: string}>();
-      expect(result[1]).toBe("Nested 2 deep")
+        .get<{ 1: string }>();
+      expect(result[1]).toBe("Nested 2 deep");
     });
 
     it("handles objects: nested 3 deep", () => {
@@ -175,8 +175,8 @@ describe("document.ts", () => {
         .object("objects")
         .object("3")
         .object("2")
-        .get<{1: string}>();
-      expect(result[1]).toBe("Nested 3 deep")
+        .get<{ 1: string }>();
+      expect(result[1]).toBe("Nested 3 deep");
     });
 
     it("handles objects: nested 4 deep", () => {
@@ -186,7 +186,7 @@ describe("document.ts", () => {
         .object("3")
         .object("2")
         .get();
-      expect(result[1]).toBe("Nested 4 deep")
+      expect(result[1]).toBe("Nested 4 deep");
     });
 
     it("handles objects: nested 5 deep", () => {
@@ -197,7 +197,7 @@ describe("document.ts", () => {
         .object("3")
         .object("2")
         .get();
-      expect(result[1]).toBe("Nested 5 deep")
+      expect(result[1]).toBe("Nested 5 deep");
     });
 
     it("handles arrays: simple", () => {
@@ -212,7 +212,7 @@ describe("document.ts", () => {
         .first()
         .array("2")
         .first()
-        .get<{1: string}>();
+        .get<{ 1: string }>();
 
       expect(result[1]).toBe("Nested 5 deep");
     });
@@ -221,7 +221,7 @@ describe("document.ts", () => {
       const onArrayField = doc
         .array("arrays")
         .findOne({
-          4: [Types.Array]
+          4: [Types.Array],
         })
         .array("4")
         .first()
@@ -229,7 +229,7 @@ describe("document.ts", () => {
         .first()
         .array("2")
         .first()
-        .get<{1: string}>();
+        .get<{ 1: string }>();
 
       expect(onArrayField[1]).toBe("Nested 5 deep array");
     });
@@ -238,88 +238,90 @@ describe("document.ts", () => {
       const onBooleanField = doc
         .array("arrays")
         .findOne({
-          4: [Types.Boolean]
+          4: [Types.Boolean],
         })
         .array("3")
         .first()
         .array("2")
         .findOne({
-          1: [Types.String]
+          1: [Types.String],
         })
-        .get<{1: string}>();
+        .get<{ 1: string }>();
 
       expect(onBooleanField[1]).toBe("Nested 3 deep boolean");
     });
 
     it("handles arrays: complex (Types.Date)", () => {
       const onDateField = doc
-      .array("arrays")
-      .findOne({
-        4: [Types.Date]
-      })
-      .array("3")
-      .first()
-      .array("2")
-      .findOne({
-        1: [Types.Array]
-      })
-      .get<{1: string}>();
+        .array("arrays")
+        .findOne({
+          4: [Types.Date],
+        })
+        .array("3")
+        .first()
+        .array("2")
+        .findOne({
+          1: [Types.Array],
+        })
+        .get<{ 1: string }>();
 
       expect(onDateField[1]).toStrictEqual(["Nested 3 deep date"]);
     });
 
     it("handles arrays: complex (Types.Number)", () => {
       const onNumberField = doc
-      .array("arrays")
-      .findOne({
-        4: [Types.Number]
-      })
-      .array("3")
-      .first()
-      .array("2")
-      .findOne({
-        1: [Types.String]
-      })
-      .get<{1: string}>();
+        .array("arrays")
+        .findOne({
+          4: [Types.Number],
+        })
+        .array("3")
+        .first()
+        .array("2")
+        .findOne({
+          1: [Types.String],
+        })
+        .get<{ 1: string }>();
 
       expect(onNumberField[1]).toBe("Nested 3 deep number");
     });
 
     it("handles arrays: complex (Types.Object)", () => {
       const onObjectField = doc
-      .array("arrays")
-      .findOne({
-        4: [Types.Object]
-      })
-      .array("3")
-      .findOne({
-        2: [Types.Array]
-      })
-      .array("2")
-      .findOne({
-        1: [Types.String]
-      })
-      .get<{1: string}>();
+        .array("arrays")
+        .findOne({
+          4: [Types.Object],
+        })
+        .array("3")
+        .findOne({
+          2: [Types.Array],
+        })
+        .array("2")
+        .findOne({
+          1: [Types.String],
+        })
+        .get<{ 1: string }>();
 
       expect(onObjectField[1]).toStrictEqual("Nested 3 deep object");
     });
 
     it("handles arrays: complex (Types.String && Types.NotDate)", () => {
       const onStringField = doc
-      .array("arrays")
-      .find({
-        4: [Types.String, Types.NotDate],
-      })
-      .first()
-      .array("3")
-      .first()
-      .array("2")
-      .findOne({
-        1: [Types.Array]
-      })
-      .get<{1: string}>();
+        .array("arrays")
+        .find({
+          4: [Types.String, Types.NotDate],
+        })
+        .first()
+        .array("3")
+        .first()
+        .array("2")
+        .findOne({
+          1: [Types.Array],
+        })
+        .get<{ 1: string }>();
 
-      expect(onStringField[1]).toStrictEqual(["Nested 3 deep array some string"]);
+      expect(onStringField[1]).toStrictEqual([
+        "Nested 3 deep array some string",
+      ]);
     });
   });
 });

@@ -52,13 +52,12 @@ export class Collection<T> {
    *
    * @returns This collection so that it can be searched further.
    */
-  public find(fields: {[field: string]: unknown}): this {
+  public find(fields: { [field: string]: unknown }): this {
     this.#data = this.#data.filter((item: T) => {
       let results = [];
 
       // Test the item
       for (const field in fields) {
-
         const objectValue = item[field];
 
         if (!objectValue) {
@@ -82,7 +81,7 @@ export class Collection<T> {
           results = this.#findBasedOnFieldTypes(
             results,
             objectValue,
-            queryValue
+            queryValue,
           );
           continue;
         }
@@ -90,8 +89,8 @@ export class Collection<T> {
         results.push(false);
       }
 
-      const test = (results.indexOf(false) == -1)
-        && (results.length >= Object.keys(fields).length);
+      const test = (results.indexOf(false) == -1) &&
+        (results.length >= Object.keys(fields).length);
       return test;
     });
 
@@ -105,7 +104,7 @@ export class Collection<T> {
    *
    * @returns The first object in the collection matching the fields.
    */
-  public findOne<T>(fields: {[field: string]: unknown }): Collection<T> {
+  public findOne<T>(fields: { [field: string]: unknown }): Collection<T> {
     this.find(fields);
     return new Collection<T>(this.#data[0] as unknown as T);
   }
@@ -160,7 +159,7 @@ export class Collection<T> {
   #findBasedOnFieldTypes(
     results: boolean[],
     objectValue: unknown,
-    fieldTypes: FieldType[]
+    fieldTypes: FieldType[],
   ): boolean[] {
     fieldTypes.forEach((fieldType: FieldType) => {
       let result = false;
@@ -208,9 +207,9 @@ export class Collection<T> {
   #fieldTypeIsDate(field: unknown): boolean {
     try {
       if (
-        typeof field !== "boolean"
-        && typeof field !== "number"
-        && typeof field !== "object"
+        typeof field !== "boolean" &&
+        typeof field !== "number" &&
+        typeof field !== "object"
       ) {
         const date = (new Date(field as string)).toISOString();
         return true;
@@ -233,5 +232,3 @@ export class Collection<T> {
     return typeof field == "object" && !Array.isArray(field);
   }
 }
-
-
