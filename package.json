@@ -9,8 +9,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:local": "yarn build:cjs && cp package.cjs.json ./dist/package.json && cd example_apps/cjs/ && yarn install --force && cd -"
+    "build:cjs": "tsc --project tsconfig.cjs.json"
   },
   "devDependencies": {
     "@types/jest": "27.x",
