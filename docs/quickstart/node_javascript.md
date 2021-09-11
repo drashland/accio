@@ -45,7 +45,7 @@
 5. Run your `app.js` file.
 
     ```
-    $ node app.ts
+    $ node app.js
     ```
 
     You should see the following:
