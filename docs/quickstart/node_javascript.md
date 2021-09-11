@@ -26,18 +26,18 @@
     const doc = accio(data);
     
     const result = doc
-      .array("versions")
-      .findOne({
-        name: "v0.0.3",
+      .array("versions")       // Target the array named "versions"
+      .findOne({               // In the array, find one object that has a name field ...
+        name: "v0.0.3",        // ... with the value of "v0.0.3"
       })
-      .array("release_notes")
-      .findOne({
-        title: "Bug Fixes",
+      .array("release_notes")  // In the object, target the array named "release_notes"
+      .findOne({               // In the array, find one object that has a title field ...
+        title: "Bug Fixes",    // ... with the value of "Bug Fixes"
       })
-      .array("body")
-      .first()
-      .get();
-    
+      .array("body")           // In the object, target the array named "body"
+      .first()                 // Target the first object in the array
+      .get();                  // Finally, get the item
+
     console.log(result.type);
     console.log(result.text);
     ```
