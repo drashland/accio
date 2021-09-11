@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.CI_USER_PAT }}
+          token: ${{ secrets.CI_USER_PAT || github.token }}
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v2
@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.CI_USER_PAT }}
+          token: ${{ secrets.CI_USER_PAT || github.token }}
 
       # Setup .npmrc file to publish to github
       - uses: actions/setup-node@v2
