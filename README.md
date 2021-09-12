@@ -76,6 +76,11 @@ The below quickstart uses Node and TypeScript. If this quickstart does not fit y
     Fix issue with date objects not being correctly validated.
     ```
 
+## Tutorials
+
+* [Searching](./docs/tutorials/searching.md)
+* [Traversing](./docs/tutorials/traversing.md)
+
 ## API
 
 View the full API documentation [here](./docs/api_reference.md).
