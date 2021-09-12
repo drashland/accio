@@ -4,7 +4,17 @@
 
 ### accio(json: string)
 
-This functions turns a JSON string into a searchable `Document`.
+* Description
+    * This functions turns a JSON string into a searchable `Document`.
+* Example
+    ```typescript
+    import { accio } from "@drashland/accio";
+    import { readFileSync } from "fs";
+    
+    const data = readFileSync("./data.json", "utf-8");
+    
+    const doc = accio(data); // The JSON data is now searchable via the classes below
+    ```
 
 ## Classes
 
@@ -14,7 +24,7 @@ This is a searchable object with methods to help you narrow down your search to 
 
 #### Methods
 
-##### .array(input: string): Collection
+##### `.array(input: string): Collection`
 
 * Description
     * This method targets an array in the document so that you can search it further.
@@ -39,7 +49,7 @@ This is a searchable object with methods to help you narrow down your search to 
     console.log(array.get()); // Outputs [ "hello" ]
     ```
 
-##### .object(input: string): Collection
+##### `.object(input: string): Collection`
 
 * Description
     * This method targets an object in the document so that you can search it further.
@@ -72,7 +82,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
 
 #### Methods
 
-##### .get()
+##### `.get()`
 
 * Description
     * This method gets the collection in its raw form.
@@ -97,7 +107,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     console.log(object.get()); // Outputs { hello: "world" }
     ```
 
-##### .array(input: string): Collection
+##### `.array(input: string): Collection`
 
 * Description
     * This method targets an array in the collection _that is an object_ so that you can search it further. This method is not the same as the `.array()` method in the `Document` object.
@@ -125,7 +135,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     console.log(array.get()); // Outputs [ "hello from field_1_1" ]
     ```
 
-##### .find(fields: {[k: string]: unknown}): this
+##### `.find(fields: {[k: string]: unknown}): this`
 
 * Description
     * This method finds objects in the collection _that is an array_ that match the given fields so that you can search them further.
@@ -166,7 +176,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     console.log(result.get()); // Outputs [ { name: "world", slug: "world_1" }, { name: "world", slug: "world_2" } ]
     ```
 
-##### .findOne(fields: {[k: string]: unknown}): Collection
+##### `.findOne(fields: {[k: string]: unknown}): Collection`
 
 * Description
     * This method finds objects in the collection _that is an array_ that match the given fields so that you can search them further.
@@ -209,7 +219,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     console.log(result.get()); // Outputs { name: "world", slug: "world_1" }
     ```
 
-##### .first(): Collection
+##### `.first(): Collection`
 
 * Description
     * This method returns the first item in the `Collection` _that is an array_ so that you can search it further.
@@ -250,7 +260,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     console.log(result.get()); // Outputs { name: "world", slug: "world_1" }
     ```
 
-##### .object(input: string): Collection
+##### `.object(input: string): Collection`
 
 * Description
     * This method targets an object in the collection _that is an object_ so that you can search it further. This method is not the same as the `.object()` method in the `Document` object.
@@ -293,7 +303,7 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     console.log(result.get()); // Outputs { field_1_1_1: [ "hello from field_1_1_1" ] }
     ```
 
-##### .stringify()
+##### `.stringify()`
 
 * Description
     * This method calls `JSON.stringify()` on the collection.
