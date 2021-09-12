@@ -23,9 +23,8 @@
     const { readFileSync } = require("fs");
     
     const data = readFileSync("./data.json", "utf-8");
-    const doc = accio(data);
     
-    const result = doc
+    const result = accio(data)
       .array("versions")       // Target the array named "versions"
       .findOne({               // In the array, find one object that has a name field ...
         name: "v0.0.3",        // ... with the value of "v0.0.3"
