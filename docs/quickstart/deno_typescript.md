@@ -1,7 +1,5 @@
 # Quickstart: Deno - TypeScript
 
-# Quickstart: Deno - JavaScript
-
 1. Create your `data.json` file. You can copy the [`example_data.json`](../../example_data.json) file from this repository.
 
 2. Create your `app.ts` file.
@@ -24,12 +22,14 @@
       })
       .array("body")           // In the object, target the array named "body"
       .first()                 // Target the first object in the array
-    
+
+    // Create the typing for the result
     type SomeType = {
       type: string;
       text: string;
     };
-    
+
+    // Use the `.get()` call and pass in the typing to get a typed result
     const typedResult = result.get<SomeType>();
     
     console.log(typedResult.type);
