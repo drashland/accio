@@ -1,6 +1,6 @@
 {
   "name": "@drashland/accio",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "An easy way to search for deeply nested data in large datasets",
   "main": "./lib/cjs/accio.js",
   "types": "./lib/cjs/accio.d.ts",
