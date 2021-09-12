@@ -1,11 +1,12 @@
 import { FieldType } from "./field_type";
 
 /**
- * This class is responsible for turning fields in a document into searchable
- * objects. The term "collection" comes from Laravel.
+ * This class is responsible for turning fields into searchable objects. The
+ * term "collection" comes from Laravel.
  */
 export class Collection<T> {
   #data: T[];
+  #data_original: T[];
   #original_object_type: string;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,8 @@ export class Collection<T> {
       this.#original_object_type = "non-array";
       this.#data = [collection];
     }
+
+    this.#data_original = this.#data;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -27,7 +30,9 @@ export class Collection<T> {
   //////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Get a field.
+   * Get the results from the search(es).
+   *
+   * @returns The data in the form of the T generic.
    */
   get<T>(): T {
     if (this.#original_object_type == "non-array") {

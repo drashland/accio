@@ -4,7 +4,6 @@ const encoder = new TextEncoder();
 Deno.run({ cmd: ["mkdir", "-p", "lib/deno"] });
 Deno.run({ cmd: ["cp", "src/accio.ts", "lib/deno/accio.ts"] });
 Deno.run({ cmd: ["cp", "src/collection.ts", "lib/deno/collection.ts"] });
-Deno.run({ cmd: ["cp", "src/document.ts", "lib/deno/document.ts"] });
 Deno.run({ cmd: ["cp", "src/field_type.ts", "lib/deno/field_type.ts"] });
 
 try {
@@ -16,7 +15,6 @@ try {
 const filesToRewrite = [
   "lib/deno/accio.ts",
   "lib/deno/collection.ts",
-  "lib/deno/document.ts",
   "lib/deno/field_type.ts",
 ]
 
