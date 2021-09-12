@@ -78,7 +78,7 @@ The below quickstart uses Node and TypeScript. If this quickstart does not fit y
 
 ## API
 
-View the full API documentation [here](./docs/api.md).
+View the full API documentation [here](./docs/api_reference.md).
 
 ---
 
