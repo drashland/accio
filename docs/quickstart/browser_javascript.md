@@ -11,7 +11,7 @@
       <body>
         <p>Open up your console to see Accio working.</p>
         <script type="module">
-          import { accio } from "https://unpkg.com/@drashland/accio@1.1.1/lib/esm/accio.js";
+          import { accio } from "https://unpkg.com/@drashland/accio@1.1.2/lib/esm/accio.js";
           (async() => {
             const response = await fetch("https://raw.githubusercontent.com/drashland/accio/main/example_data.json");
             const data = await response.text();

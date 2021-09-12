@@ -5,7 +5,7 @@
 2. Create your `app.js` file.
 
     ```javascript
-    import { accio } from "https://unpkg.com/@drashland/accio@1.1.1/lib/esm/accio.js";
+    import { accio } from "https://unpkg.com/@drashland/accio@1.1.2/lib/esm/accio.js";
     const decoder = new TextDecoder();
     
     const data = decoder.decode(Deno.readFileSync("./data.json"));
