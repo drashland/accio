@@ -144,8 +144,10 @@ A `Collection` is a class that wraps itself around an array or object. When cons
     const doc = accio(data);
 
     const result = doc
-      .object("field_1")   // Get a Collection that is an object in the Document
-      .array("field_1_1"); // Target the array in the object
+      .array("field_3")
+      .find({
+        name: "world"
+      });
 
     console.log(result); // Outputs Collection {}
     console.log(result.get()); // Outputs [ { name: "world", slug: "world_1" }, { name: "world", slug: "world_2" } ]
