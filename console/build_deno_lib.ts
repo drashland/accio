@@ -1,6 +1,7 @@
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
+Deno.run({ cmd: ["mkdir", "-p", "lib/deno"] });
 Deno.run({ cmd: ["cp", "src/accio.ts", "lib/deno/accio.ts"] });
 Deno.run({ cmd: ["cp", "src/collection.ts", "lib/deno/collection.ts"] });
 Deno.run({ cmd: ["cp", "src/document.ts", "lib/deno/document.ts"] });
