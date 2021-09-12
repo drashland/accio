@@ -6,7 +6,6 @@ Deno.run({ cmd: ["cp", "src/accio.ts", "lib/deno/accio.ts"] });
 Deno.run({ cmd: ["cp", "src/collection.ts", "lib/deno/collection.ts"] });
 Deno.run({ cmd: ["cp", "src/document.ts", "lib/deno/document.ts"] });
 Deno.run({ cmd: ["cp", "src/field_type.ts", "lib/deno/field_type.ts"] });
-Deno.run({ cmd: ["chmod", "700", "lib/deno/*.ts"] });
 
 const filesToRewrite = [
   "lib/deno/accio.ts",
