@@ -8,7 +8,7 @@
 
     _Note: `-y` skips all of the prompts._
 
-2. Install Accio and the `ts-node` CLI.
+2. Install Accio.
 
     ```
     $ npm install @drashland/accio
