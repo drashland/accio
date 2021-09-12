@@ -6,6 +6,7 @@ An easy way to search for deeply nested data in large datasets
 
 The below quickstart uses Node and TypeScript. If this quickstart does not fit your needs, check out the other guides below:
 
+* [Quickstart: Browser - JavaScript](./docs/quickstart/browser_javascript.md)
 * [Quickstart: Node - JavaScript](./docs/quickstart/node_javascript.md)
 * [Quickstart: Deno - JavaScript](./docs/quickstart/deno_javascript.md)
 * [Quickstart: Deno - TypeScript](./docs/quickstart/deno_typescript.md)
