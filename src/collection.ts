@@ -268,7 +268,7 @@ export class Collection<T> {
   #queryItem(item: T, fields: { [field: string]: unknown }): boolean[] {
     let results: boolean[] = [];
 
-    if (typeof item != "object") {
+    if (!item || typeof item != "object") {
       results.push(false);
       return results;
     }
