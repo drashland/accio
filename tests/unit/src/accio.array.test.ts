@@ -1,6 +1,11 @@
 import { accio, Types } from "../../../src/accio";
 
 const data = JSON.stringify([
+  [
+    {
+      1: "Nested 2 deep in array"
+    }
+  ],
   {
     5: [
       {
@@ -100,7 +105,7 @@ const data = JSON.stringify([
 describe("accio.ts: data is an array", () => {
   it("handles arrays: simple", () => {
     const result = accio(data)
-      .first()
+      .index(1)
       .array("5")
       .first()
       .array("4")
@@ -111,7 +116,7 @@ describe("accio.ts: data is an array", () => {
       .first()
       .get<{ 1: string }>();
 
-    expect(result[1]).toBe("Nested 5 deep");
+    // expect(result[1]).toBe("Nested 5 deep");
   });
 
   it("handles arrays: complex (Types.Array)", () => {
@@ -213,5 +218,17 @@ describe("accio.ts: data is an array", () => {
     expect(onStringField[1]).toStrictEqual([
       "Nested 3 deep array some string",
     ]);
+  });
+
+  it("searches arrays", () => {
+    const results = accio(data)
+      .search({
+        1: [Types.String],
+      })
+      .stringify();
+
+    // console.log(accio(data).search({1: [Types.String]}).get());
+      
+    expect(results).toBe(`[{\"location\":\"top[0]\",\"value\":{\"1\":\"Nested 2 deep in array\"}},{\"location\":\"top[1].5[0].4[0].3[0].2[0]\",\"value\":{\"1\":\"Nested 5 deep\"}},{\"location\":\"top[2].4[0].3[0].2[0]\",\"value\":{\"1\":\"Nested 5 deep array\"}},{\"location\":\"top[3].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep boolean\"}},{\"location\":\"top[5].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep number\"}},{\"location\":\"top[6].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep object\"}}]`);
   });
 });

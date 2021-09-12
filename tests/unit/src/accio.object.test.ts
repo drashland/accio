@@ -319,4 +319,26 @@ describe("accio.ts: data is an object", () => {
       "Nested 3 deep array some string",
     ]);
   });
+
+  it("searches objects", () => {
+    const results = accio(data)
+      .object("objects")
+      .search({
+        1: [Types.String, Types.NotDate],
+      })
+      .stringify();
+
+    expect(results).toBe(`[{"location":"top.2","value":{"1":"Nested 2 deep"}},{"location":"top.3.1","value":{"1":"Nested 3 deep"}},{"location":"top.3.2","value":{"1":"Nested 3 deep"}},{"location":"top.4.1","value":{"1":"Nested 3 deep"}},{"location":"top.4.2.2","value":{"1":"Nested 4 deep"}},{"location":"top.4.3.2","value":{"1":"Nested 4 deep"}},{"location":"top.5.1","value":{"1":"Nested 3 deep"}},{"location":"top.5.2","value":{"1":"Nested 3 deep"}},{"location":"top.5.3.3.2","value":{"1":"Nested 5 deep"}},{"location":"top.5.4.3.2","value":{"1":"Nested 5 deep"}}]`);
+  });
+
+  it("searches arrays", () => {
+    const results = accio(data)
+      .object("arrays")
+      .search({
+        1: [Types.String],
+      })
+      .stringify();
+      
+    expect(results).toBe(`[{\"location\":\"top[0].5[0].4[0].3[0].2[0]\",\"value\":{\"1\":\"Nested 5 deep\"}},{\"location\":\"top[1].4[0].3[0].2[0]\",\"value\":{\"1\":\"Nested 5 deep array\"}},{\"location\":\"top[2].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep boolean\"}},{\"location\":\"top[4].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep number\"}},{\"location\":\"top[5].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep object\"}}]`);
+  });
 });
