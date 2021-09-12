@@ -46,6 +46,9 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@drashland'
 
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
       - name: Install deps
         run: yarn install
 
