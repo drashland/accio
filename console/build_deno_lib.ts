@@ -9,16 +9,14 @@ Deno.run({ cmd: ["cp", "src/field_type.ts", "lib/deno/field_type.ts"] });
 Deno.run({ cmd: ["chmod", "700", "lib/deno/*.ts"] });
 
 const filesToRewrite = [
-  "/lib/deno/accio.ts",
-  "/lib/deno/collection.ts",
-  "/lib/deno/document.ts",
-  "/lib/deno/field_type.ts",
+  "lib/deno/accio.ts",
+  "lib/deno/collection.ts",
+  "lib/deno/document.ts",
+  "lib/deno/field_type.ts",
 ]
 
 filesToRewrite.forEach((file: string) => {
-  let filepath = Deno.realPathSync(".") + file;
-  console.log(`Writing the following file:`, filepath);
-  let contents = decoder.decode(Deno.readFileSync(filepath));
+  let contents = decoder.decode(Deno.readFileSync(file));
 
   const importStatements = contents.match(/import.*";/g);
 
