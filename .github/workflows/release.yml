@@ -19,6 +19,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: '@drashland'
 
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
       - name: Install deps
         run: yarn install
 
