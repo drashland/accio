@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  npm:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,34 +28,12 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Publish
+      - name: Publish (npm)
         run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
 
-  github:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.CI_USER_PAT || github.token }}
-
-      # Setup .npmrc file to publish to github
-      - uses: actions/setup-node@v2
-        with:
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@drashland'
-
-      - name: Install Deno
-        uses: denolib/setup-deno@master
-
-      - name: Install deps
-        run: yarn install
-
-      - name: Build
-        run: yarn build
-
-      - name: Publish
+      - name: Publish (GitHub)
         run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
