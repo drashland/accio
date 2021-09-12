@@ -42,7 +42,9 @@ export class Collection<T> {
    * @returns The array as a searchable collection.
    */
   public array<T>(input: string): Collection<T> {
-    return new Collection<T>(this.#data[0][input]);
+    return new Collection<T>(
+      (this.#data[0] as unknown as {[k: string]: T})[input]
+    );
   }
 
   /**
@@ -54,11 +56,11 @@ export class Collection<T> {
    */
   public find(fields: { [field: string]: unknown }): this {
     this.#data = this.#data.filter((item: T) => {
-      let results = [];
+      let results: boolean[] = [];
 
       // Test the item
       for (const field in fields) {
-        const objectValue = item[field];
+        const objectValue = item[field as keyof T];
 
         if (!objectValue) {
           results.push(false);
@@ -68,12 +70,20 @@ export class Collection<T> {
         const queryValue = fields[field];
 
         if (typeof queryValue == "number") {
-          results.push(objectValue == queryValue);
+          if (typeof objectValue == "number") {
+            results.push(objectValue == queryValue);
+          } else {
+            results.push(false);
+          }
           continue;
         }
 
         if (typeof queryValue == "string") {
-          results.push(objectValue == queryValue.trim());
+          if (typeof objectValue == "string") {
+            results.push(objectValue == queryValue.trim());
+          } else {
+            results.push(false);
+          }
           continue;
         }
 
@@ -125,7 +135,9 @@ export class Collection<T> {
    * @returns The object as a searchable collection.
    */
   public object<T>(input: string): Collection<T> {
-    return new Collection<T>(this.#data[0][input]);
+    return new Collection<T>(
+      (this.#data[0] as unknown as {[k: string]: T})[input]
+    );
   }
 
   /**

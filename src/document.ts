@@ -25,7 +25,7 @@ export class Document<T> {
    * @returns The value of the field.
    */
   get<T>(input: string): T {
-    return this.#data[input] as unknown as T;
+    return (this.#data as unknown as {[k: string]: unknown})[input] as unknown as T;
   }
 
   /**
@@ -34,7 +34,9 @@ export class Document<T> {
    * @returns A Collection that is searchable.
    */
   array<T>(input: string): Collection<T> {
-    return new Collection(this.#data[input]);
+    return new Collection(
+      (this.#data as unknown as {[k: string]: T})[input]
+    );
   }
 
   /**
@@ -43,6 +45,8 @@ export class Document<T> {
    * @returns A Collection that is searchable.
    */
   object<T>(input: string): Collection<T> {
-    return new Collection(this.#data[input]);
+    return new Collection(
+      (this.#data as unknown as {[k: string]: T})[input]
+    );
   }
 }
