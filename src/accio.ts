@@ -1,8 +1,8 @@
 import { FieldType } from "./field_type";
 import { Document } from "./document";
 
-export function accio<T>(data: string): Document<T> {
-  return new Document<T>(data);
+export function accio<T>(json: string): Document<T> {
+  return new Document<T>(json);
 }
 
 export const Types = {

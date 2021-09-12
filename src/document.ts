@@ -20,15 +20,6 @@ export class Document<T> {
   //////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Get a field from the document.
-   *
-   * @returns The value of the field.
-   */
-  get<T>(input: string): T {
-    return (this.#data as unknown as {[k: string]: unknown})[input] as unknown as T;
-  }
-
-  /**
    * Get a field that is an array from the document.
    *
    * @returns A Collection that is searchable.
