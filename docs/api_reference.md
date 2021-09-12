@@ -82,31 +82,6 @@ A `Collection` is a class that wraps itself around an array or object. When cons
 
 #### Methods
 
-##### `.get()`
-
-* Description
-    * This method gets the collection in its raw form.
-* Returns
-    * The collection in its raw form. If the collection is an array, then it returns an array. If the collection is an object, then it returns an object.
-* Example
-    ```typescript
-    import { accio } from "@drashland/accio";
-    
-    const data = JSON.stringify({
-      field_1: {"hello": "world"},
-      field_2: "hello world",
-      field_3: ["hello"],
-    });
-    
-    const doc = accio(data);
-
-    const array = doc.array("field_3");
-    console.log(array.get()); // Outputs [ "hello" ]
-
-    const object = doc.object("field_1");
-    console.log(object.get()); // Outputs { hello: "world" }
-    ```
-
 ##### `.array(input: string): Collection`
 
 * Description
@@ -258,6 +233,31 @@ A `Collection` is a class that wraps itself around an array or object. When cons
 
     console.log(result); // Outputs Collection {}
     console.log(result.get()); // Outputs { name: "world", slug: "world_1" }
+    ```
+
+##### `.get()`
+
+* Description
+    * This method gets the collection in its raw form.
+* Returns
+    * The collection in its raw form. If the collection is an array, then it returns an array. If the collection is an object, then it returns an object.
+* Example
+    ```typescript
+    import { accio } from "@drashland/accio";
+    
+    const data = JSON.stringify({
+      field_1: {"hello": "world"},
+      field_2: "hello world",
+      field_3: ["hello"],
+    });
+    
+    const doc = accio(data);
+
+    const array = doc.array("field_3");
+    console.log(array.get()); // Outputs [ "hello" ]
+
+    const object = doc.object("field_1");
+    console.log(object.get()); // Outputs { hello: "world" }
     ```
 
 ##### `.object(input: string): Collection`
