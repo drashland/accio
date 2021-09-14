@@ -304,7 +304,7 @@ export class Collection<T> {
         const value = result.value;
         if (
           !value
-          || (typeof value == "object" && Object.keys(value).length <= 0)
+          || (typeof value == "object" && Object.keys(value!).length <= 0)
           || (Array.isArray(value) && value.length <= 0)
         ) {
           return false;
@@ -313,7 +313,7 @@ export class Collection<T> {
         return true;
       })
       .map((result: TSearchResult) => {
-        return result.value;
+        return result.value as TSearchResult;
       });
   }
 
