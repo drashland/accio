@@ -386,6 +386,29 @@ describe("accio.ts: data is an object", () => {
     expect(results).toStrictEqual(expected);
   });
 
+  it("searches objects and returns a flattened results array", () => {
+    const results = accio(data)
+      .object("objects")
+      .search(
+        {
+          1: [Types.String, Types.NotDate],
+        },
+        {
+          flatten: true,
+          projection: [
+            2
+          ],
+        },
+      )
+      .get();
+
+    const expected = [
+      { '2': 'Next to 1' },
+    ];
+
+    expect(results).toStrictEqual(expected);
+  });
+
   it("searches arrays", () => {
     const results = accio(data)
       .object("arrays")
@@ -410,6 +433,33 @@ describe("accio.ts: data is an object", () => {
       { location: 'top[2].3[0].2[0]', value: { '2': 'Next to 1' } },
       { location: 'top[4].3[0].2[0]', value: { '2': 'Next to 1' } },
       { location: 'top[5].3[0].2[0]', value: { '2': 'Next to 1' } }
+    ];
+
+    expect(results).toStrictEqual(expected);
+  });
+
+  it("searches arrays and returns a flattened results array", () => {
+    const results = accio(data)
+      .object("arrays")
+      .search(
+        {
+          1: [Types.String],
+        },
+        {
+          flatten: true,
+          projection: [
+            2
+          ]
+        }
+      )
+      .get();
+
+    const expected = [
+      { '2': 'Next to 1' },
+      { '2': 'Next to 1' },
+      { '2': 'Next to 1' },
+      { '2': 'Next to 1' },
+      { '2': 'Next to 1' },
     ];
 
     expect(results).toStrictEqual(expected);

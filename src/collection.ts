@@ -5,12 +5,13 @@ type TQueryFields = {
 };
 
 type TSearchResult = {
-  location: string;
-  value: unknown;
+  location?: string;
+  value?: unknown;
 };
 
 type TSearchOptions = {
   projection?: Array<number|string>;
+  flatten?: boolean;
 }
 
 /**
@@ -145,26 +146,26 @@ export class Collection<T> {
   public search(
     fields: TQueryFields,
     options: TSearchOptions = {},
-  ): Collection<TSearchResult[]> {
+  ): Collection<Array<TSearchResult|{[k: string]: unknown}>> {
     const results: TSearchResult[] = [];
 
     if (this.#original_object_type == "non-array") {
       let dataObject = this.#searchObject(this.#data[0], fields, "top", results);
       if (options.projection) {
-        dataObject = this.#performProjection(
-          dataObject,
-          options.projection,
-        );
+        dataObject = this.#performProjection(dataObject, options.projection);
+      }
+      if (options.flatten) {
+        dataObject = this.#performFlatten(dataObject);
       }
       return new Collection<TSearchResult[]>(dataObject);
     }
 
     let dataArray = this.#searchArray(this.#data, fields, "top", results);
     if (options.projection) {
-      dataArray = this.#performProjection(
-        dataArray,
-        options.projection,
-      );
+      dataArray = this.#performProjection(dataArray, options.projection);
+    }
+    if (options.flatten) {
+      dataArray = this.#performFlatten(dataArray);
     }
     return new Collection<TSearchResult[]>(dataArray);
   }
@@ -288,7 +289,37 @@ export class Collection<T> {
   }
 
   /**
-   * Return only what the user asked for based on the project.
+   * Return a flattened search results set that does not include the `location`
+   * and `value` keys. Instead, it returns an array of the values found.
+   *
+   * @param results - The results to mutate.
+   *
+   * @param The results flattened.
+   */
+  #performFlatten(
+    results: TSearchResult[],
+  ): TSearchResult[] {
+    return results
+      .filter((result: TSearchResult) => {
+        const value = result.value;
+        if (
+          !value
+          || (typeof value == "object" && Object.keys(value).length <= 0)
+          || (Array.isArray(value) && value.length <= 0)
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+      .map((result: TSearchResult) => {
+        return result.value;
+      });
+  }
+
+  /**
+   * Return a search results set that only include the user asked for based on
+   * the projection.
    *
    * @param results - The results to mutate.
    * @param projection - See TSearchOptions.projection.
