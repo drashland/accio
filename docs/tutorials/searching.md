@@ -34,7 +34,7 @@ For simplicity, this tutorial will use Node and JavaScript.
 4. Create your `app.js` file.
 
     ```javascript
-    const { accio } = require("../../lib/cjs/accio");
+    const { accio } = require("@drashland/accio");
     const { readFileSync } = require("fs");
 
     const data = readFileSync("./data.json", "utf-8");
@@ -94,7 +94,7 @@ You can use one or all options with the `.search()` method. If you use all optio
 You can flatten your search results to only return the `value` field in your search results set. For example ...
 
 ```javascript
-const { accio } = require("../../lib/cjs/accio");
+const { accio } = require("@drashland/accio");
 const { readFileSync } = require("fs");
 
 const data = readFileSync("./data.json", "utf-8");
@@ -125,7 +125,7 @@ console.log(results);
 Just like MongoDB's `projection` option, you can tell the `.search()` method to only return the fields that you are interested in. For example ...
 
 ```javascript
-const { accio } = require("../../lib/cjs/accio");
+const { accio } = require("@drashland/accio");
 const { readFileSync } = require("fs");
 
 const data = readFileSync("./data.json", "utf-8");
@@ -164,7 +164,7 @@ console.log(results);
 If you want to transform your data further, you can use this option to transform your data to your liking.
 
 ```javascript
-const { accio } = require("../../lib/cjs/accio");
+const { accio } = require("@drashland/accio");
 const { readFileSync } = require("fs");
 
 const data = readFileSync("./data.json", "utf-8");

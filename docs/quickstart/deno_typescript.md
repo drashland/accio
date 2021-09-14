@@ -5,7 +5,7 @@
 2. Create your `app.ts` file.
 
     ```typescript
-    import { accio } from "https://unpkg.com/@drashland/accio@1.1.2/lib/deno/accio.ts";
+    import { accio } from "https://unpkg.com/@drashland/accio@1.2.0/lib/deno/accio.ts";
     const decoder = new TextDecoder();
     
     const data = decoder.decode(Deno.readFileSync("./data.json"));

@@ -241,6 +241,10 @@ A collection is a class that wraps itself around an array or object. When constr
     console.log(result.get()); // Outputs { field_1_1_1: [ "hello from field_1_1_1" ] }
     ```
 
+#### `.search()`
+
+See the [Searching](./tutorials/searching.md) tutorial for more information on this API.
+
 ##### `.stringify()`
 
 * Description
