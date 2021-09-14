@@ -6,7 +6,7 @@ The `.search()` method returns an array of results. If there are results in the 
 
 ```
 {
-  location: string;  // This field tells you exactly where Accio found the item
+  location: string;  // This field tells you exactly where Accio found the item (top means the beginning of the object)
   value: any;        // This field is the item Accio found at the above location
 }
 ```
@@ -70,3 +70,132 @@ For simplicity, this tutorial will use Node and JavaScript.
       }
     ]
     ```
+
+## Options
+
+The `.search()` method takes in an optional `options` object to help you transform your data. The options are as follows:
+
+```javascript
+{
+  flatten: boolean;                 // Example: true
+  projection: Array<number|string>; // Example: [ "1", 2, "3", "four" ]
+  transformer: Function;            // Example: (results) => { results.value.map(doSomething) }
+}
+```
+
+You can use one or all options with the `.search()` method. If you use all options, they will occur in the following order:
+
+* Projection
+* Flatten
+* Transformer
+
+### Flatten
+
+You can flatten your search results to only return the `value` field in your search results set. For example ...
+
+```javascript
+const { accio } = require("../../lib/cjs/accio");
+const { readFileSync } = require("fs");
+
+const data = readFileSync("./data.json", "utf-8");
+
+const results = accio(data)
+  .search( 
+    {
+      title: "Bug Fixes"  // In the collection, search for all items that have a "title" field with a value of "Bug Fixes"
+    },
+    {
+      flatten: true       // Return only the value field of the search results
+    }
+  )
+  .get();
+
+console.log(results);
+
+// Outputs the following:
+//
+//   [
+//     { title: 'Bug Fixes', body: [Array] }
+//     { title: 'Bug Fixes', body: [Array] }
+//   ]
+```
+
+### Projection
+
+Just like MongoDB's `projection` option, you can tell the `.search()` method to only return the fields that you are interested in. For example ...
+
+```javascript
+const { accio } = require("../../lib/cjs/accio");
+const { readFileSync } = require("fs");
+
+const data = readFileSync("./data.json", "utf-8");
+
+const results = accio(data)
+  .search( 
+    {
+      title: "Bug Fixes"  // In the collection, search for all items that have a "title" field with a value of "Bug Fixes"
+    },
+    {
+      projection: [
+        "body"            // Return ONLY a body field in the value field of the search results
+      ]
+    }
+  )
+  .get();
+
+console.log(results);
+
+// Outputs the following:
+//
+//   [
+//     {
+//       location: 'top.versions[0].release_notes[1]',
+//       value: { body: [Array] }
+//     },
+//     {
+//       location: 'top.versions[1].release_notes[1]',
+//       value: { body: [Array] }
+//     }
+//   ]
+```
+
+### Transformer
+
+If you want to transform your data further, you can use this option to transform your data to your liking.
+
+```javascript
+const { accio } = require("../../lib/cjs/accio");
+const { readFileSync } = require("fs");
+
+const data = readFileSync("./data.json", "utf-8");
+
+const results = accio(data)
+  .search( 
+    {
+      title: "Bug Fixes"  // In the collection, search for all items that have a "title" field with a value of "Bug Fixes"
+    },
+    {
+      transformer: (result) => {
+        if (result.body) {
+          result.has_body = true;
+        }
+      ]
+    }
+  )
+  .get();
+
+console.log(results);
+
+// Outputs the following:
+//
+//   [
+//     {
+//       location: 'top.versions[0].release_notes[1]',
+//       value: { title: 'Bug Fixes', body: [Array], has_body: true }
+//     },
+//     {
+//       location: 'top.versions[1].release_notes[1]',
+//       value: { title: 'Bug Fixes', body: [Array], has_body: true }
+//     }
+//   ]
+```
