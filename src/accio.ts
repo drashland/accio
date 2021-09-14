@@ -1,12 +1,11 @@
 import { FieldType } from "./field_type";
 import { Collection } from "./collection";
+import * as Types from "./types";
 
 export function accio<T>(json: string): Collection<T> {
   const parsed = JSON.parse(json);
   return new Collection<T>(parsed);
 }
-
-export * as Types from "./types";
 
 export const FieldTypes = {
   Array: new FieldType("array"),
@@ -17,3 +16,5 @@ export const FieldTypes = {
   String: new FieldType("string"),
   NotDate: new FieldType("not_date"),
 };
+
+export { Types };
