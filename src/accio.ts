@@ -6,7 +6,9 @@ export function accio<T>(json: string): Collection<T> {
   return new Collection<T>(parsed);
 }
 
-export const Types = {
+export * as Types from "./types";
+
+export const FieldTypes = {
   Array: new FieldType("array"),
   Boolean: new FieldType("boolean"),
   Date: new FieldType("date"),
