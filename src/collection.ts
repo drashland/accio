@@ -6,7 +6,11 @@ type TQueryFields = {
 
 type TSearchResult = {
   location: string;
-  value: unknown
+  value: unknown;
+};
+
+type TSearchOptions = {
+  projection?: Array<number|string>;
 }
 
 /**
@@ -43,9 +47,9 @@ export class Collection<T> {
    *
    * @returns The array as a searchable collection.
    */
-   public array<T>(input: string): Collection<T> {
+  public array<T>(input: string): Collection<T> {
     return new Collection<T>(
-      (this.#data[0] as unknown as {[k: string]: T})[input]
+      (this.#data[0] as unknown as { [k: string]: T })[input],
     );
   }
 
@@ -103,14 +107,16 @@ export class Collection<T> {
 
   /**
    * Target the item in this collection
-   * 
+   *
    * @param index - The index of the item in the data.
-   * 
+   *
    * @returns The item.
    */
   public index(index: number): Collection<T> {
     if (this.#original_object_type != "array") {
-      throw new Error(`Cannot call 'index()' on a collection that is not an array.`);
+      throw new Error(
+        `Cannot call 'index()' on a collection that is not an array.`,
+      );
     }
 
     return new Collection<T>(this.#data[index]);
@@ -123,19 +129,44 @@ export class Collection<T> {
    */
   public object<T>(input: string): Collection<T> {
     return new Collection<T>(
-      (this.#data[0] as unknown as {[k: string]: T})[input]
+      (this.#data[0] as unknown as { [k: string]: T })[input],
     );
   }
 
+  /**
+   * Search for items containing the specified fields.
+   *
+   * @param fields - The fields to query the items against. Any item matching
+   * the fields will be returned.
+   * @param options - A list of options to control the search.
+   *
+   * @returns An array of search results.
+   */
   public search(
     fields: TQueryFields,
-    results: TSearchResult[] = []
+    options: TSearchOptions = {},
   ): Collection<TSearchResult[]> {
+    const results: TSearchResult[] = [];
+
     if (this.#original_object_type == "non-array") {
-      return new Collection<TSearchResult[]>(this.#searchObject(this.#data[0], fields, "top", results));
+      let dataObject = this.#searchObject(this.#data[0], fields, "top", results);
+      if (options.projection) {
+        dataObject = this.#performProjection(
+          dataObject,
+          options.projection,
+        );
+      }
+      return new Collection<TSearchResult[]>(dataObject);
     }
 
-    return new Collection<TSearchResult[]>(this.#searchArray(this.#data, fields, "top", results));
+    let dataArray = this.#searchArray(this.#data, fields, "top", results);
+    if (options.projection) {
+      dataArray = this.#performProjection(
+        dataArray,
+        options.projection,
+      );
+    }
+    return new Collection<TSearchResult[]>(dataArray);
   }
 
   /**
@@ -245,23 +276,59 @@ export class Collection<T> {
   /**
    * Based on the evaluations, does the item that was queried in
    * `this.#queryItem()` pass the query?
-   * 
+   *
    * @param evaluations - A results set.
    * @param fields - The fields that were used to query the item.
-   * 
+   *
    * @returns True if the item passes the query, false if not.
    */
   #passesQuery(evaluations: boolean[], fields: TQueryFields): boolean {
-    return (evaluations.indexOf(false) == -1)
-      && (evaluations.length >= Object.keys(fields).length);
+    return (evaluations.indexOf(false) == -1) &&
+      (evaluations.length >= Object.keys(fields).length);
+  }
+
+  /**
+   * Return only what the user asked for based on the project.
+   *
+   * @param results - The results to mutate.
+   * @param projection - See TSearchOptions.projection.
+   *
+   * @returns The results only containing what the user asked for.
+   */
+  #performProjection(
+    results: TSearchResult[],
+    projection: Array<number|string>
+  ): TSearchResult[] {
+    // Change projections to strings so they can be matched to keys in the data
+    // object
+    projection = projection.map((field: number|string) => {
+      return field.toString();
+    });
+
+    return results.map((result: TSearchResult) => {
+      const fields: {[k: string]: unknown} = {};
+      const iterable = (result.value as {[k: string]: unknown});
+
+      for (const field in iterable) {
+        if (projection.indexOf(field.toString()) == -1) {
+          continue;
+        }
+
+        fields[field] = iterable[field];
+      }
+
+      result.value = fields;
+
+      return result;
+    });
   }
 
   /**
    * Query the item in question to see if it matches the fields.
-   * 
+   *
    * @param item - The item in quesiton.
    * @param fields - The fields to query the item against.
-   * 
+   *
    * @returns A results set that can be further evaluated to see if the item
    * matches the fields.
    */
@@ -333,17 +400,16 @@ export class Collection<T> {
    * @param fields - The fields to use to query items in the array.
    * @param location - The current location of the search.
    * @param results - The set of results that matched the fields.
-   * 
+   *
    * @returns All results that matched the fields.
    */
   #searchArray(
     array: T[],
     fields: TQueryFields,
     location: string,
-    results: TSearchResult[] = []
+    results: TSearchResult[] = [],
   ): TSearchResult[] {
     array.forEach((item: T, index: number) => {
-
       if (Array.isArray(item)) {
         results.concat(
           this.#searchArray(
@@ -351,7 +417,7 @@ export class Collection<T> {
             fields,
             location,
             results,
-          )
+          ),
         );
       }
 
@@ -361,7 +427,7 @@ export class Collection<T> {
         if (this.#passesQuery(this.#queryItem(item, fields), fields)) {
           results.push({
             location: `${location}[${index}]`,
-            value: item
+            value: item,
           });
         }
 
@@ -373,7 +439,7 @@ export class Collection<T> {
             fields,
             `${location}[${index}]`,
             results,
-          )
+          ),
         );
       }
     });
@@ -388,24 +454,29 @@ export class Collection<T> {
    * @param fields - The fields to use to query items in the array.
    * @param location - The current location of the search.
    * @param results - The set of results that matched the fields.
-   * 
+   *
    * @returns All results that matched the fields.
    */
   #searchObject(
     object: T,
     fields: TQueryFields,
     location: string,
-    results: TSearchResult[] = []
+    results: TSearchResult[] = [],
   ): TSearchResult[] {
     for (const itemField in object) {
       const objectValue = object[itemField as keyof T];
 
       // Firstly, does this object meet the query? If so, then add it to the
       // results.
-      if (this.#passesQuery(this.#queryItem(objectValue as unknown as T, fields), fields)) {
+      if (
+        this.#passesQuery(
+          this.#queryItem(objectValue as unknown as T, fields),
+          fields,
+        )
+      ) {
         results.push({
           location: `${location}.${itemField}`,
-          value: objectValue
+          value: objectValue,
         });
       }
 
@@ -416,7 +487,7 @@ export class Collection<T> {
             fields,
             `${location}.${itemField}`,
             results,
-          )
+          ),
         );
       }
 
@@ -427,7 +498,7 @@ export class Collection<T> {
             fields,
             `${location}.${itemField}`,
             results,
-          )
+          ),
         );
       }
     }

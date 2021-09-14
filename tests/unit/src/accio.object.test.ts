@@ -5,6 +5,7 @@ const data = JSON.stringify({
     1: "Nested 1 deep",
     2: {
       1: "Nested 2 deep",
+      2: "Next to 1",
     },
     3: {
       2: {
@@ -63,6 +64,7 @@ const data = JSON.stringify({
                   2: [
                     {
                       1: "Nested 5 deep",
+                      2: "Next to 1",
                     },
                   ],
                 },
@@ -80,6 +82,7 @@ const data = JSON.stringify({
               2: [
                 {
                   1: "Nested 5 deep array",
+                  2: "Next to 1",
                 },
               ],
             },
@@ -94,6 +97,7 @@ const data = JSON.stringify({
           2: [
             {
               1: "Nested 3 deep boolean",
+              2: "Next to 1",
             },
           ],
         },
@@ -106,6 +110,7 @@ const data = JSON.stringify({
           2: [
             {
               1: ["Nested 3 deep date"],
+              2: "Next to 1",
             },
           ],
         },
@@ -118,6 +123,7 @@ const data = JSON.stringify({
           2: [
             {
               1: "Nested 3 deep number",
+              2: "Next to 1",
             },
           ],
         },
@@ -130,6 +136,7 @@ const data = JSON.stringify({
           2: [
             {
               1: "Nested 3 deep object",
+              2: "Next to 1",
             },
           ],
         },
@@ -142,6 +149,7 @@ const data = JSON.stringify({
           2: [
             {
               1: ["Nested 3 deep array some string"],
+              2: "Next to 1",
             },
           ],
         },
@@ -326,19 +334,84 @@ describe("accio.ts: data is an object", () => {
       .search({
         1: [Types.String, Types.NotDate],
       })
-      .stringify();
+      .get();
 
-    expect(results).toBe(`[{"location":"top.2","value":{"1":"Nested 2 deep"}},{"location":"top.3.1","value":{"1":"Nested 3 deep"}},{"location":"top.3.2","value":{"1":"Nested 3 deep"}},{"location":"top.4.1","value":{"1":"Nested 3 deep"}},{"location":"top.4.2.2","value":{"1":"Nested 4 deep"}},{"location":"top.4.3.2","value":{"1":"Nested 4 deep"}},{"location":"top.5.1","value":{"1":"Nested 3 deep"}},{"location":"top.5.2","value":{"1":"Nested 3 deep"}},{"location":"top.5.3.3.2","value":{"1":"Nested 5 deep"}},{"location":"top.5.4.3.2","value":{"1":"Nested 5 deep"}}]`);
+    const expected = [
+      {
+        location: 'top.2',
+        value: { '1': 'Nested 2 deep', '2': 'Next to 1' }
+      },
+      { location: 'top.3.1', value: { '1': 'Nested 3 deep' } },
+      { location: 'top.3.2', value: { '1': 'Nested 3 deep' } },
+      { location: 'top.4.1', value: { '1': 'Nested 3 deep' } },
+      { location: 'top.4.2.2', value: { '1': 'Nested 4 deep' } },
+      { location: 'top.4.3.2', value: { '1': 'Nested 4 deep' } },
+      { location: 'top.5.1', value: { '1': 'Nested 3 deep' } },
+      { location: 'top.5.2', value: { '1': 'Nested 3 deep' } },
+      { location: 'top.5.3.3.2', value: { '1': 'Nested 5 deep' } },
+      { location: 'top.5.4.3.2', value: { '1': 'Nested 5 deep' } }
+    ];
+
+    expect(results).toStrictEqual(expected);
+  });
+
+  it("searches objects and returns projected fields", () => {
+    const results = accio(data)
+      .object("objects")
+      .search(
+        {
+          1: [Types.String, Types.NotDate],
+        },
+        {
+          projection: [
+            2
+          ],
+        }
+      )
+      .get();
+
+    const expected = [
+      { location: 'top.2', value: { '2': 'Next to 1' } },
+      { location: 'top.3.1', value: {} },
+      { location: 'top.3.2', value: {} },
+      { location: 'top.4.1', value: {} },
+      { location: 'top.4.2.2', value: {} },
+      { location: 'top.4.3.2', value: {} },
+      { location: 'top.5.1', value: {} },
+      { location: 'top.5.2', value: {} },
+      { location: 'top.5.3.3.2', value: {} },
+      { location: 'top.5.4.3.2', value: {} }
+    ];
+
+    expect(results).toStrictEqual(expected);
   });
 
   it("searches arrays", () => {
     const results = accio(data)
       .object("arrays")
-      .search({
-        1: [Types.String],
-      })
-      .stringify();
-      
-    expect(results).toBe(`[{\"location\":\"top[0].5[0].4[0].3[0].2[0]\",\"value\":{\"1\":\"Nested 5 deep\"}},{\"location\":\"top[1].4[0].3[0].2[0]\",\"value\":{\"1\":\"Nested 5 deep array\"}},{\"location\":\"top[2].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep boolean\"}},{\"location\":\"top[4].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep number\"}},{\"location\":\"top[5].3[0].2[0]\",\"value\":{\"1\":\"Nested 3 deep object\"}}]`);
+      .search(
+        {
+          1: [Types.String],
+        },
+        {
+          projection: [
+            2
+          ]
+        }
+      )
+      .get();
+
+    const expected = [
+      {
+        location: 'top[0].5[0].4[0].3[0].2[0]',
+        value: { '2': 'Next to 1' }
+      },
+      { location: 'top[1].4[0].3[0].2[0]', value: { '2': 'Next to 1' } },
+      { location: 'top[2].3[0].2[0]', value: { '2': 'Next to 1' } },
+      { location: 'top[4].3[0].2[0]', value: { '2': 'Next to 1' } },
+      { location: 'top[5].3[0].2[0]', value: { '2': 'Next to 1' } }
+    ];
+
+    expect(results).toStrictEqual(expected);
   });
 });
