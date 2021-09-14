@@ -338,18 +338,18 @@ describe("accio.ts: data is an object", () => {
 
     const expected = [
       {
-        location: 'top.2',
-        value: { '1': 'Nested 2 deep', '2': 'Next to 1' }
+        location: "top.2",
+        value: { "1": "Nested 2 deep", "2": "Next to 1" },
       },
-      { location: 'top.3.1', value: { '1': 'Nested 3 deep' } },
-      { location: 'top.3.2', value: { '1': 'Nested 3 deep' } },
-      { location: 'top.4.1', value: { '1': 'Nested 3 deep' } },
-      { location: 'top.4.2.2', value: { '1': 'Nested 4 deep' } },
-      { location: 'top.4.3.2', value: { '1': 'Nested 4 deep' } },
-      { location: 'top.5.1', value: { '1': 'Nested 3 deep' } },
-      { location: 'top.5.2', value: { '1': 'Nested 3 deep' } },
-      { location: 'top.5.3.3.2', value: { '1': 'Nested 5 deep' } },
-      { location: 'top.5.4.3.2', value: { '1': 'Nested 5 deep' } }
+      { location: "top.3.1", value: { "1": "Nested 3 deep" } },
+      { location: "top.3.2", value: { "1": "Nested 3 deep" } },
+      { location: "top.4.1", value: { "1": "Nested 3 deep" } },
+      { location: "top.4.2.2", value: { "1": "Nested 4 deep" } },
+      { location: "top.4.3.2", value: { "1": "Nested 4 deep" } },
+      { location: "top.5.1", value: { "1": "Nested 3 deep" } },
+      { location: "top.5.2", value: { "1": "Nested 3 deep" } },
+      { location: "top.5.3.3.2", value: { "1": "Nested 5 deep" } },
+      { location: "top.5.4.3.2", value: { "1": "Nested 5 deep" } },
     ];
 
     expect(results).toStrictEqual(expected);
@@ -364,23 +364,23 @@ describe("accio.ts: data is an object", () => {
         },
         {
           projection: [
-            2
+            2,
           ],
-        }
+        },
       )
       .get();
 
     const expected = [
-      { location: 'top.2', value: { '2': 'Next to 1' } },
-      { location: 'top.3.1', value: {} },
-      { location: 'top.3.2', value: {} },
-      { location: 'top.4.1', value: {} },
-      { location: 'top.4.2.2', value: {} },
-      { location: 'top.4.3.2', value: {} },
-      { location: 'top.5.1', value: {} },
-      { location: 'top.5.2', value: {} },
-      { location: 'top.5.3.3.2', value: {} },
-      { location: 'top.5.4.3.2', value: {} }
+      { location: "top.2", value: { "2": "Next to 1" } },
+      { location: "top.3.1", value: {} },
+      { location: "top.3.2", value: {} },
+      { location: "top.4.1", value: {} },
+      { location: "top.4.2.2", value: {} },
+      { location: "top.4.3.2", value: {} },
+      { location: "top.5.1", value: {} },
+      { location: "top.5.2", value: {} },
+      { location: "top.5.3.3.2", value: {} },
+      { location: "top.5.4.3.2", value: {} },
     ];
 
     expect(results).toStrictEqual(expected);
@@ -396,14 +396,14 @@ describe("accio.ts: data is an object", () => {
         {
           flatten: true,
           projection: [
-            2
+            2,
           ],
         },
       )
       .get();
 
     const expected = [
-      { '2': 'Next to 1' },
+      { "2": "Next to 1" },
     ];
 
     expect(results).toStrictEqual(expected);
@@ -418,21 +418,21 @@ describe("accio.ts: data is an object", () => {
         },
         {
           projection: [
-            2
-          ]
-        }
+            2,
+          ],
+        },
       )
       .get();
 
     const expected = [
       {
-        location: 'top[0].5[0].4[0].3[0].2[0]',
-        value: { '2': 'Next to 1' }
+        location: "top[0].5[0].4[0].3[0].2[0]",
+        value: { "2": "Next to 1" },
       },
-      { location: 'top[1].4[0].3[0].2[0]', value: { '2': 'Next to 1' } },
-      { location: 'top[2].3[0].2[0]', value: { '2': 'Next to 1' } },
-      { location: 'top[4].3[0].2[0]', value: { '2': 'Next to 1' } },
-      { location: 'top[5].3[0].2[0]', value: { '2': 'Next to 1' } }
+      { location: "top[1].4[0].3[0].2[0]", value: { "2": "Next to 1" } },
+      { location: "top[2].3[0].2[0]", value: { "2": "Next to 1" } },
+      { location: "top[4].3[0].2[0]", value: { "2": "Next to 1" } },
+      { location: "top[5].3[0].2[0]", value: { "2": "Next to 1" } },
     ];
 
     expect(results).toStrictEqual(expected);
@@ -448,18 +448,18 @@ describe("accio.ts: data is an object", () => {
         {
           flatten: true,
           projection: [
-            2
-          ]
-        }
+            2,
+          ],
+        },
       )
       .get();
 
     const expected = [
-      { '2': 'Next to 1' },
-      { '2': 'Next to 1' },
-      { '2': 'Next to 1' },
-      { '2': 'Next to 1' },
-      { '2': 'Next to 1' },
+      { "2": "Next to 1" },
+      { "2": "Next to 1" },
+      { "2": "Next to 1" },
+      { "2": "Next to 1" },
+      { "2": "Next to 1" },
     ];
 
     expect(results).toStrictEqual(expected);

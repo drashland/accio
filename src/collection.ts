@@ -1,18 +1,5 @@
 import { FieldType } from "./field_type";
-
-type TQueryFields = {
-  [k: string]: unknown;
-};
-
-type TSearchResult = {
-  location?: string;
-  value?: unknown;
-};
-
-type TSearchOptions = {
-  projection?: Array<number|string>;
-  flatten?: boolean;
-}
+import * as Types from "./types";
 
 /**
  * This class is responsible for turning fields into searchable objects. The
@@ -61,7 +48,7 @@ export class Collection<T> {
    *
    * @returns This collection so that it can be searched further.
    */
-  public find(fields: TQueryFields): this {
+  public find(fields: Types.TQueryFields): this {
     this.#data = this.#data.filter((item: T) => {
       const results = this.#queryItem(item, fields);
       const test = (results.indexOf(false) == -1) &&
@@ -79,7 +66,7 @@ export class Collection<T> {
    *
    * @returns The first object in the collection matching the fields.
    */
-  public findOne<T>(fields: TQueryFields): Collection<T> {
+  public findOne<T>(fields: Types.TQueryFields): Collection<T> {
     this.find(fields);
     return new Collection<T>(this.#data[0] as unknown as T);
   }
@@ -144,20 +131,25 @@ export class Collection<T> {
    * @returns An array of search results.
    */
   public search(
-    fields: TQueryFields,
-    options: TSearchOptions = {},
-  ): Collection<Array<TSearchResult|{[k: string]: unknown}>> {
-    const results: TSearchResult[] = [];
+    fields: Types.TQueryFields,
+    options: Types.TSearchOptions = {},
+  ): Collection<Array<Types.TSearchResult | { [k: string]: unknown }>> {
+    const results: Types.TSearchResult[] = [];
 
     if (this.#original_object_type == "non-array") {
-      let dataObject = this.#searchObject(this.#data[0], fields, "top", results);
+      let dataObject = this.#searchObject(
+        this.#data[0],
+        fields,
+        "top",
+        results,
+      );
       if (options.projection) {
         dataObject = this.#performProjection(dataObject, options.projection);
       }
       if (options.flatten) {
         dataObject = this.#performFlatten(dataObject);
       }
-      return new Collection<TSearchResult[]>(dataObject);
+      return new Collection<Types.TSearchResult[]>(dataObject);
     }
 
     let dataArray = this.#searchArray(this.#data, fields, "top", results);
@@ -167,7 +159,7 @@ export class Collection<T> {
     if (options.flatten) {
       dataArray = this.#performFlatten(dataArray);
     }
-    return new Collection<TSearchResult[]>(dataArray);
+    return new Collection<Types.TSearchResult[]>(dataArray);
   }
 
   /**
@@ -283,7 +275,7 @@ export class Collection<T> {
    *
    * @returns True if the item passes the query, false if not.
    */
-  #passesQuery(evaluations: boolean[], fields: TQueryFields): boolean {
+  #passesQuery(evaluations: boolean[], fields: Types.TQueryFields): boolean {
     return (evaluations.indexOf(false) == -1) &&
       (evaluations.length >= Object.keys(fields).length);
   }
@@ -297,23 +289,23 @@ export class Collection<T> {
    * @param The results flattened.
    */
   #performFlatten(
-    results: TSearchResult[],
-  ): TSearchResult[] {
+    results: Types.TSearchResult[],
+  ): Types.TSearchResult[] {
     return results
-      .filter((result: TSearchResult) => {
+      .filter((result: Types.TSearchResult) => {
         const value = result.value;
         if (
-          !value
-          || (typeof value == "object" && Object.keys(value!).length <= 0)
-          || (Array.isArray(value) && value.length <= 0)
+          !value ||
+          (typeof value == "object" && Object.keys(value!).length <= 0) ||
+          (Array.isArray(value) && value.length <= 0)
         ) {
           return false;
         }
 
         return true;
       })
-      .map((result: TSearchResult) => {
-        return result.value as TSearchResult;
+      .map((result: Types.TSearchResult) => {
+        return result.value as Types.TSearchResult;
       });
   }
 
@@ -322,23 +314,23 @@ export class Collection<T> {
    * the projection.
    *
    * @param results - The results to mutate.
-   * @param projection - See TSearchOptions.projection.
+   * @param projection - See Types.TSearchOptions.projection.
    *
    * @returns The results only containing what the user asked for.
    */
   #performProjection(
-    results: TSearchResult[],
-    projection: Array<number|string>
-  ): TSearchResult[] {
+    results: Types.TSearchResult[],
+    projection: Array<number | string>,
+  ): Types.TSearchResult[] {
     // Change projections to strings so they can be matched to keys in the data
     // object
-    projection = projection.map((field: number|string) => {
+    projection = projection.map((field: number | string) => {
       return field.toString();
     });
 
-    return results.map((result: TSearchResult) => {
-      const fields: {[k: string]: unknown} = {};
-      const iterable = (result.value as {[k: string]: unknown});
+    return results.map((result: Types.TSearchResult) => {
+      const fields: { [k: string]: unknown } = {};
+      const iterable = (result.value as { [k: string]: unknown });
 
       for (const field in iterable) {
         if (projection.indexOf(field.toString()) == -1) {
@@ -436,10 +428,10 @@ export class Collection<T> {
    */
   #searchArray(
     array: T[],
-    fields: TQueryFields,
+    fields: Types.TQueryFields,
     location: string,
-    results: TSearchResult[] = [],
-  ): TSearchResult[] {
+    results: Types.TSearchResult[] = [],
+  ): Types.TSearchResult[] {
     array.forEach((item: T, index: number) => {
       if (Array.isArray(item)) {
         results.concat(
@@ -490,10 +482,10 @@ export class Collection<T> {
    */
   #searchObject(
     object: T,
-    fields: TQueryFields,
+    fields: Types.TQueryFields,
     location: string,
-    results: TSearchResult[] = [],
-  ): TSearchResult[] {
+    results: Types.TSearchResult[] = [],
+  ): Types.TSearchResult[] {
     for (const itemField in object) {
       const objectValue = object[itemField as keyof T];
 
