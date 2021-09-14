@@ -149,6 +149,9 @@ export class Collection<T> {
       if (options.flatten) {
         dataObject = this.#performFlatten(dataObject);
       }
+      if (options.transformer) {
+        dataObject = dataObject.map(options.transformer);
+      }
       return new Collection<Types.TSearchResult[]>(dataObject);
     }
 
@@ -158,6 +161,9 @@ export class Collection<T> {
     }
     if (options.flatten) {
       dataArray = this.#performFlatten(dataArray);
+    }
+    if (options.transformer) {
+      dataArray = dataArray.map(options.transformer);
     }
     return new Collection<Types.TSearchResult[]>(dataArray);
   }
