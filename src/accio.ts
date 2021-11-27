@@ -2,9 +2,12 @@ import { FieldType } from "./field_type";
 import { Collection } from "./collection";
 import * as Types from "./types";
 
-export function accio<T>(json: string): Collection<T> {
-  const parsed = JSON.parse(json);
-  return new Collection<T>(parsed);
+export function accio<T>(json: unknown): Collection<T> {
+  if (typeof json === "string") {
+    return new Collection<T>(JSON.parse(json));
+  }
+
+  return new Collection<T>(json as T);
 }
 
 export const FieldTypes = {
