@@ -87,4 +87,4 @@ View the full API documentation [here](./docs/api_reference.md).
 
 ---
 
-Want to contribute? Follow the Contributing Guidelines [here](https://github.com/drashland/.github/blob/master/CONTRIBUTING.md). All code is released under the [MIT License](https://github.com/drashland/deno-drash/blob/master/LICENSE).
+Want to contribute? Follow the Contributing Guidelines [here](https://github.com/drashland/.github/blob/master/CONTRIBUTING.md). All code is released under the [MIT License](https://github.com/drashland/deno-drash/blob/main/LICENSE).
