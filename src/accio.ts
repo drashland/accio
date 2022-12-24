@@ -1,6 +1,6 @@
-import { FieldType } from "./field_type";
-import { Collection } from "./collection";
-import * as Types from "./types";
+import { FieldType } from "./field_type.ts";
+import { Collection } from "./collection.ts";
+import * as Types from "./types.ts";
 
 export function accio<T>(json: unknown): Collection<T> {
   if (typeof json === "string") {

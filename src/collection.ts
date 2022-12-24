@@ -1,5 +1,5 @@
-import { FieldType } from "./field_type";
-import * as Types from "./types";
+import { FieldType } from "./field_type.ts";
+import * as Types from "./types.ts";
 
 /**
  * This class is responsible for turning fields into searchable objects. The
@@ -251,7 +251,9 @@ export class Collection<T> {
         typeof field !== "number" &&
         typeof field !== "object"
       ) {
-        const date = (new Date(field as string)).toISOString();
+        // If this does not error out, then we have a date.
+        // TODO(crookse) We should probably do more validation than this.
+        (new Date(field as string)).toISOString();
         return true;
       }
     } catch (_error) {

@@ -1,5 +1,4 @@
-import { transcode } from "buffer";
-import { accio, FieldTypes } from "../../../src/accio";
+const { accio, FieldTypes } = require("../../../../lib/cjs/accio");
 
 const data = JSON.stringify([
   [
@@ -116,9 +115,9 @@ describe("accio.ts: data is an array", () => {
       .first()
       .array("2")
       .first()
-      .get<{ 1: string }>();
+      .get();
 
-    // expect(result[1]).toBe("Nested 5 deep");
+    expect(result[1]).toBe("Nested 5 deep");
   });
 
   it("handles arrays: complex (FieldTypes.Array)", () => {
@@ -132,7 +131,7 @@ describe("accio.ts: data is an array", () => {
       .first()
       .array("2")
       .first()
-      .get<{ 1: string }>();
+      .get();
 
     expect(onArrayField[1]).toBe("Nested 5 deep array");
   });
@@ -148,7 +147,7 @@ describe("accio.ts: data is an array", () => {
       .findOne({
         1: [FieldTypes.String],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onBooleanField[1]).toBe("Nested 3 deep boolean");
   });
@@ -164,7 +163,7 @@ describe("accio.ts: data is an array", () => {
       .findOne({
         1: [FieldTypes.Array],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onDateField[1]).toStrictEqual(["Nested 3 deep date"]);
   });
@@ -180,7 +179,7 @@ describe("accio.ts: data is an array", () => {
       .findOne({
         1: [FieldTypes.String],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onNumberField[1]).toBe("Nested 3 deep number");
   });
@@ -198,7 +197,7 @@ describe("accio.ts: data is an array", () => {
       .findOne({
         1: [FieldTypes.String],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onObjectField[1]).toStrictEqual("Nested 3 deep object");
   });
@@ -215,7 +214,7 @@ describe("accio.ts: data is an array", () => {
       .findOne({
         1: [FieldTypes.Array],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onStringField[1]).toStrictEqual([
       "Nested 3 deep array some string",
@@ -230,30 +229,30 @@ describe("accio.ts: data is an array", () => {
       .get();
 
     expect(results).toStrictEqual([
-      { location: 'top[0]', value: { '1': 'Nested 2 deep in array' } },
+      { location: "top[0]", value: { "1": "Nested 2 deep in array" } },
       {
-        location: 'top[1].5[0].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep' }
+        location: "top[1].5[0].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep" },
       },
       {
-        location: 'top[2].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep array' }
+        location: "top[2].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep array" },
       },
       {
-        location: 'top[3].3[0].2[0]',
-        value: { '1': 'Nested 3 deep boolean' }
+        location: "top[3].3[0].2[0]",
+        value: { "1": "Nested 3 deep boolean" },
       },
       {
-        location: 'top[5].3[0].2[0]',
+        location: "top[5].3[0].2[0]",
         value: {
-          '1': 'Nested 3 deep number',
-          '2': ['Next to 1'],
-        }
+          "1": "Nested 3 deep number",
+          "2": ["Next to 1"],
+        },
       },
       {
-        location: 'top[6].3[0].2[0]',
-        value: { '1': 'Nested 3 deep object' }
-      }
+        location: "top[6].3[0].2[0]",
+        value: { "1": "Nested 3 deep object" },
+      },
     ]);
   });
 
@@ -264,18 +263,18 @@ describe("accio.ts: data is an array", () => {
           1: [FieldTypes.String],
         },
         {
-          flatten: true
-        }
+          flatten: true,
+        },
       )
       .get();
 
     expect(results).toStrictEqual([
-      { '1': 'Nested 2 deep in array' },
-      { '1': 'Nested 5 deep' },
-      { '1': 'Nested 5 deep array' },
-      { '1': 'Nested 3 deep boolean' },
-      { '1': 'Nested 3 deep number', '2': ['Next to 1'] },
-      { '1': 'Nested 3 deep object' },
+      { "1": "Nested 2 deep in array" },
+      { "1": "Nested 5 deep" },
+      { "1": "Nested 5 deep array" },
+      { "1": "Nested 3 deep boolean" },
+      { "1": "Nested 3 deep number", "2": ["Next to 1"] },
+      { "1": "Nested 3 deep object" },
     ]);
   });
 
@@ -288,14 +287,14 @@ describe("accio.ts: data is an array", () => {
         {
           flatten: true,
           projection: [
-            2
-          ]
-        }
+            2,
+          ],
+        },
       )
       .get();
 
     expect(results).toStrictEqual([
-      { '2': ['Next to 1'] },
+      { "2": ["Next to 1"] },
     ]);
   });
 
@@ -307,46 +306,46 @@ describe("accio.ts: data is an array", () => {
         },
         {
           transformer: (result) => {
-            if (result.value['1']) {
+            if (result.value["1"]) {
               result.has_one = true;
             }
             return result;
-          }
-        }
+          },
+        },
       )
       .get();
 
     expect(results).toStrictEqual([
       {
-        location: 'top[0]',
-        value: { '1': 'Nested 2 deep in array' },
-        has_one: true
+        location: "top[0]",
+        value: { "1": "Nested 2 deep in array" },
+        has_one: true,
       },
       {
-        location: 'top[1].5[0].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep' },
-        has_one: true
+        location: "top[1].5[0].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep" },
+        has_one: true,
       },
       {
-        location: 'top[2].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep array' },
-        has_one: true
+        location: "top[2].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep array" },
+        has_one: true,
       },
       {
-        location: 'top[3].3[0].2[0]',
-        value: { '1': 'Nested 3 deep boolean' },
-        has_one: true
+        location: "top[3].3[0].2[0]",
+        value: { "1": "Nested 3 deep boolean" },
+        has_one: true,
       },
       {
-        location: 'top[5].3[0].2[0]',
-        value: { '1': 'Nested 3 deep number', '2': ['Next to 1'] },
-        has_one: true
+        location: "top[5].3[0].2[0]",
+        value: { "1": "Nested 3 deep number", "2": ["Next to 1"] },
+        has_one: true,
       },
       {
-        location: 'top[6].3[0].2[0]',
-        value: { '1': 'Nested 3 deep object' },
-        has_one: true
-      }
+        location: "top[6].3[0].2[0]",
+        value: { "1": "Nested 3 deep object" },
+        has_one: true,
+      },
     ]);
   });
 });

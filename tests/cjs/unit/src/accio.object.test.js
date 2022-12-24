@@ -1,4 +1,4 @@
-import { accio, FieldTypes } from "../../../src/accio";
+const { accio, FieldTypes } = require("../../../../lib/cjs/accio");
 
 const data = JSON.stringify({
   objects: {
@@ -162,7 +162,7 @@ describe("accio.ts: data is an object", () => {
   it("handles objects: nested 1 deep", () => {
     const result = accio(data)
       .object("objects")
-      .get<{ 1: string }>();
+      .get();
     expect(result[1]).toBe("Nested 1 deep");
   });
 
@@ -170,7 +170,7 @@ describe("accio.ts: data is an object", () => {
     const result = accio(data)
       .object("objects")
       .object("2")
-      .get<{ 1: string }>();
+      .get();
     expect(result[1]).toBe("Nested 2 deep");
   });
 
@@ -179,7 +179,7 @@ describe("accio.ts: data is an object", () => {
       .object("objects")
       .object("3")
       .object("2")
-      .get<{ 1: string }>();
+      .get();
     expect(result[1]).toBe("Nested 3 deep");
   });
 
@@ -216,7 +216,7 @@ describe("accio.ts: data is an object", () => {
       .first()
       .array("2")
       .first()
-      .get<{ 1: string }>();
+      .get();
 
     expect(result[1]).toBe("Nested 5 deep");
   });
@@ -233,7 +233,7 @@ describe("accio.ts: data is an object", () => {
       .first()
       .array("2")
       .first()
-      .get<{ 1: string }>();
+      .get();
 
     expect(onArrayField[1]).toBe("Nested 5 deep array");
   });
@@ -250,7 +250,7 @@ describe("accio.ts: data is an object", () => {
       .findOne({
         1: [FieldTypes.String],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onBooleanField[1]).toBe("Nested 3 deep boolean");
   });
@@ -267,7 +267,7 @@ describe("accio.ts: data is an object", () => {
       .findOne({
         1: [FieldTypes.Array],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onDateField[1]).toStrictEqual(["Nested 3 deep date"]);
   });
@@ -284,7 +284,7 @@ describe("accio.ts: data is an object", () => {
       .findOne({
         1: [FieldTypes.String],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onNumberField[1]).toBe("Nested 3 deep number");
   });
@@ -303,7 +303,7 @@ describe("accio.ts: data is an object", () => {
       .findOne({
         1: [FieldTypes.String],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onObjectField[1]).toStrictEqual("Nested 3 deep object");
   });
@@ -321,7 +321,7 @@ describe("accio.ts: data is an object", () => {
       .findOne({
         1: [FieldTypes.Array],
       })
-      .get<{ 1: string }>();
+      .get();
 
     expect(onStringField[1]).toStrictEqual([
       "Nested 3 deep array some string",
@@ -451,11 +451,11 @@ describe("accio.ts: data is an object", () => {
             2,
           ],
           transformer: (result) => {
-            if (result['2']) {
+            if (result["2"]) {
               result.has_two = true;
             }
             return result;
-          }
+          },
         },
       )
       .get();
