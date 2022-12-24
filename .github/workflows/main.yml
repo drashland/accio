@@ -1,0 +1,72 @@
+name: Main
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  linter:
+    # We only require one OS in linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
+      - name: Lint code
+        run: deno lint --unstable src/
+
+  formatter:
+    # We only require one OS in formatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
+      - name: Lint code
+        run: deno fmt --check
+
+  tests_deno:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
+      - name: Unit Test
+        run: deno test tests/deno/
+
+  tests_node:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        # We only support until EOL.
+        # See https://github.com/nodejs/Release.
+        node: ['14', '16', '18']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install deps
+        run: yarn install
+
+      - name: Unit Test
+        run: yarn test
