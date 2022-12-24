@@ -13,6 +13,7 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:deno": "deno run --allow-read --allow-run --allow-write ./console/build_deno_lib.ts",
     "build": "yarn build:cjs && yarn build:esm && yarn build:deno"
+    "build:esm-lib": "deno run --allow-read --allow-write --reload https://raw.githubusercontent.com/drashland/services/v0.2.7/builders/lib_builder/src/build_esm_lib.ts ./src --workspace=./tmp/conversion_workspace --debug",
   },
   "devDependencies": {
     "@types/jest": "27.x",
