@@ -1,3 +1,16 @@
+# files
+.DS_Store
+
+# directories
+.idea
+.vscode
 lib/
 node_modules/
+tmp*/
 tmp/
+
+# exceptions
+!.gitkeep
+
+# locks
+yarn.lock
