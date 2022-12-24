@@ -8,19 +8,29 @@
   "author": "Drash Land",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
+    "build": "yarn build:esm-lib && yarn && yarn build:esm && yarn build:cjs",
     "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:conversion-workspace": "deno run --allow-read --allow-write ./console/build_esm_lib.ts",
     "build:esm": "tsc --project tsconfig.esm.json",
-    "build:deno": "deno run --allow-read --allow-run --allow-write ./console/build_deno_lib.ts",
-    "build": "yarn build:cjs && yarn build:esm && yarn build:deno"
     "build:esm-lib": "deno run --allow-read --allow-write --reload https://raw.githubusercontent.com/drashland/services/v0.2.7/builders/lib_builder/src/build_esm_lib.ts ./src --workspace=./tmp/conversion_workspace --debug",
+    "build:windows": "bash console/build_esm_lib ./src ./mod.ts --workspace=./tmp/conversion_workspace --debug && yarn && yarn build:cjs && yarn build:esm",
+    "release": "yarn publish --access public",
+    "test": "yarn test:deno && yarn test:cjs && yarn test:esm",
+    "test:cjs": "yarn jest tests/cjs/",
+    "test:deno": "deno test -A tests/deno/",
+    "test:esm": "yarn jest tests/esm/",
+    "validate:nix": "rm -rf node_modules && rm yarn.lock && yarn build && yarn test"
   },
   "devDependencies": {
+    "@babel/core": "7.x",
+    "@babel/preset-env": "7.x",
     "@types/jest": "27.x",
     "@types/node": "16.x",
+    "babel-jest": "27.x",
     "jest": "27.x",
     "ts-jest": "27.x",
     "ts-node": "10.x",
+    "tsc": "2.x",
     "typescript": "4.x"
   },
   "files": [
