@@ -1,5 +1,5 @@
-import { transcode } from "buffer";
-import { accio, FieldTypes } from "../../../src/accio";
+import { accio, FieldTypes, Types } from "../../../../src/accio.ts";
+import { assertEquals } from "../../deps.ts";
 
 const data = JSON.stringify([
   [
@@ -104,8 +104,8 @@ const data = JSON.stringify([
   },
 ]);
 
-describe("accio.ts: data is an array", () => {
-  it("handles arrays: simple", () => {
+Deno.test("accio.ts: data is an array", async (t) => {
+  await t.step("handles arrays: simple", () => {
     const result = accio(data)
       .index(1)
       .array("5")
@@ -118,10 +118,10 @@ describe("accio.ts: data is an array", () => {
       .first()
       .get<{ 1: string }>();
 
-    // expect(result[1]).toBe("Nested 5 deep");
+    assertEquals(result[1], "Nested 5 deep");
   });
 
-  it("handles arrays: complex (FieldTypes.Array)", () => {
+  await t.step("handles arrays: complex (FieldTypes.Array)", () => {
     const onArrayField = accio(data)
       .findOne({
         4: [FieldTypes.Array],
@@ -134,10 +134,10 @@ describe("accio.ts: data is an array", () => {
       .first()
       .get<{ 1: string }>();
 
-    expect(onArrayField[1]).toBe("Nested 5 deep array");
+    assertEquals(onArrayField[1], "Nested 5 deep array");
   });
 
-  it("handles arrays: complex (FieldTypes.Boolean)", () => {
+  await t.step("handles arrays: complex (FieldTypes.Boolean)", () => {
     const onBooleanField = accio(data)
       .findOne({
         4: [FieldTypes.Boolean],
@@ -150,10 +150,10 @@ describe("accio.ts: data is an array", () => {
       })
       .get<{ 1: string }>();
 
-    expect(onBooleanField[1]).toBe("Nested 3 deep boolean");
+    assertEquals(onBooleanField[1], "Nested 3 deep boolean");
   });
 
-  it("handles arrays: complex (FieldTypes.Date)", () => {
+  await t.step("handles arrays: complex (FieldTypes.Date)", () => {
     const onDateField = accio(data)
       .findOne({
         4: [FieldTypes.Date],
@@ -164,12 +164,12 @@ describe("accio.ts: data is an array", () => {
       .findOne({
         1: [FieldTypes.Array],
       })
-      .get<{ 1: string }>();
+      .get<{ 1: string[] }>();
 
-    expect(onDateField[1]).toStrictEqual(["Nested 3 deep date"]);
+    assertEquals(onDateField[1], ["Nested 3 deep date"]);
   });
 
-  it("handles arrays: complex (FieldTypes.Number)", () => {
+  await t.step("handles arrays: complex (FieldTypes.Number)", () => {
     const onNumberField = accio(data)
       .findOne({
         4: [FieldTypes.Number],
@@ -182,10 +182,10 @@ describe("accio.ts: data is an array", () => {
       })
       .get<{ 1: string }>();
 
-    expect(onNumberField[1]).toBe("Nested 3 deep number");
+    assertEquals(onNumberField[1], "Nested 3 deep number");
   });
 
-  it("handles arrays: complex (FieldTypes.Object)", () => {
+  await t.step("handles arrays: complex (FieldTypes.Object)", () => {
     const onObjectField = accio(data)
       .findOne({
         4: [FieldTypes.Object],
@@ -200,86 +200,89 @@ describe("accio.ts: data is an array", () => {
       })
       .get<{ 1: string }>();
 
-    expect(onObjectField[1]).toStrictEqual("Nested 3 deep object");
+    assertEquals(onObjectField[1], "Nested 3 deep object");
   });
 
-  it("handles arrays: complex (FieldTypes.String && FieldTypes.NotDate)", () => {
-    const onStringField = accio(data)
-      .find({
-        4: [FieldTypes.String, FieldTypes.NotDate],
-      })
-      .first()
-      .array("3")
-      .first()
-      .array("2")
-      .findOne({
-        1: [FieldTypes.Array],
-      })
-      .get<{ 1: string }>();
+  await t.step(
+    "handles arrays: complex (FieldTypes.String && FieldTypes.NotDate)",
+    () => {
+      const onStringField = accio(data)
+        .find({
+          4: [FieldTypes.String, FieldTypes.NotDate],
+        })
+        .first()
+        .array("3")
+        .first()
+        .array("2")
+        .findOne({
+          1: [FieldTypes.Array],
+        })
+        .get<{ 1: string[] }>();
 
-    expect(onStringField[1]).toStrictEqual([
-      "Nested 3 deep array some string",
-    ]);
-  });
+      assertEquals(onStringField[1], [
+        "Nested 3 deep array some string",
+      ]);
+    },
+  );
 
-  it("searches arrays", () => {
+  await t.step("searches arrays", () => {
     const results = accio(data)
       .search({
         1: [FieldTypes.String],
       })
       .get();
 
-    expect(results).toStrictEqual([
-      { location: 'top[0]', value: { '1': 'Nested 2 deep in array' } },
+    assertEquals(results, [
+      { location: "top[0]", value: { "1": "Nested 2 deep in array" } },
       {
-        location: 'top[1].5[0].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep' }
+        location: "top[1].5[0].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep" },
       },
       {
-        location: 'top[2].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep array' }
+        location: "top[2].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep array" },
       },
       {
-        location: 'top[3].3[0].2[0]',
-        value: { '1': 'Nested 3 deep boolean' }
+        location: "top[3].3[0].2[0]",
+        value: { "1": "Nested 3 deep boolean" },
       },
       {
-        location: 'top[5].3[0].2[0]',
+        location: "top[5].3[0].2[0]",
         value: {
-          '1': 'Nested 3 deep number',
-          '2': ['Next to 1'],
-        }
+          "1": "Nested 3 deep number",
+          "2": ["Next to 1"],
+        },
       },
       {
-        location: 'top[6].3[0].2[0]',
-        value: { '1': 'Nested 3 deep object' }
-      }
+        location: "top[6].3[0].2[0]",
+        value: { "1": "Nested 3 deep object" },
+      },
     ]);
   });
 
-  it("searches arrays: flatten", () => {
+  await t.step("searches arrays: flatten", () => {
     const results = accio(data)
       .search(
         {
           1: [FieldTypes.String],
         },
         {
-          flatten: true
-        }
+          flatten: true,
+        },
       )
       .get();
 
-    expect(results).toStrictEqual([
-      { '1': 'Nested 2 deep in array' },
-      { '1': 'Nested 5 deep' },
-      { '1': 'Nested 5 deep array' },
-      { '1': 'Nested 3 deep boolean' },
-      { '1': 'Nested 3 deep number', '2': ['Next to 1'] },
-      { '1': 'Nested 3 deep object' },
+    assertEquals(results, [
+      { "1": "Nested 2 deep in array" },
+      { "1": "Nested 5 deep" },
+      { "1": "Nested 5 deep array" },
+      { "1": "Nested 3 deep boolean" },
+      { "1": "Nested 3 deep number", "2": ["Next to 1"] },
+      { "1": "Nested 3 deep object" },
     ]);
   });
 
-  it("searches arrays: projection", () => {
+  await t.step("searches arrays: projection", () => {
     const results = accio(data)
       .search(
         {
@@ -288,65 +291,68 @@ describe("accio.ts: data is an array", () => {
         {
           flatten: true,
           projection: [
-            2
-          ]
-        }
+            2,
+          ],
+        },
       )
       .get();
 
-    expect(results).toStrictEqual([
-      { '2': ['Next to 1'] },
+    assertEquals(results, [
+      { "2": ["Next to 1"] },
     ]);
   });
 
-  it("searches arrays: transformer", () => {
+  await t.step("searches arrays: transformer", () => {
     const results = accio(data)
       .search(
         {
           1: [FieldTypes.String],
         },
         {
-          transformer: (result) => {
-            if (result.value['1']) {
+          transformer: (result: Types.TSearchResult) => {
+            if (
+              result.value && typeof result.value === "object" &&
+              ("1" in result.value)
+            ) {
               result.has_one = true;
             }
             return result;
-          }
-        }
+          },
+        },
       )
       .get();
 
-    expect(results).toStrictEqual([
+    assertEquals(results, [
       {
-        location: 'top[0]',
-        value: { '1': 'Nested 2 deep in array' },
-        has_one: true
+        location: "top[0]",
+        value: { "1": "Nested 2 deep in array" },
+        has_one: true,
       },
       {
-        location: 'top[1].5[0].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep' },
-        has_one: true
+        location: "top[1].5[0].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep" },
+        has_one: true,
       },
       {
-        location: 'top[2].4[0].3[0].2[0]',
-        value: { '1': 'Nested 5 deep array' },
-        has_one: true
+        location: "top[2].4[0].3[0].2[0]",
+        value: { "1": "Nested 5 deep array" },
+        has_one: true,
       },
       {
-        location: 'top[3].3[0].2[0]',
-        value: { '1': 'Nested 3 deep boolean' },
-        has_one: true
+        location: "top[3].3[0].2[0]",
+        value: { "1": "Nested 3 deep boolean" },
+        has_one: true,
       },
       {
-        location: 'top[5].3[0].2[0]',
-        value: { '1': 'Nested 3 deep number', '2': ['Next to 1'] },
-        has_one: true
+        location: "top[5].3[0].2[0]",
+        value: { "1": "Nested 3 deep number", "2": ["Next to 1"] },
+        has_one: true,
       },
       {
-        location: 'top[6].3[0].2[0]',
-        value: { '1': 'Nested 3 deep object' },
-        has_one: true
-      }
+        location: "top[6].3[0].2[0]",
+        value: { "1": "Nested 3 deep object" },
+        has_one: true,
+      },
     ]);
   });
 });

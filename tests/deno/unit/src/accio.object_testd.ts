@@ -1,4 +1,4 @@
-import { accio, FieldTypes } from "../../../src/accio";
+import { accio, FieldTypes } from "../../../../../lib/accio.ts";
 
 const data = JSON.stringify({
   objects: {
@@ -451,11 +451,11 @@ describe("accio.ts: data is an object", () => {
             2,
           ],
           transformer: (result) => {
-            if (result['2']) {
+            if (result["2"]) {
               result.has_two = true;
             }
             return result;
-          }
+          },
         },
       )
       .get();
