@@ -1,4 +1,4 @@
-import { accio, FieldTypes } from "../../../../lib/esm/accio";
+import { accio, FieldTypes } from "../../../../lib/esm/src/accio";
 
 const data = JSON.stringify([
   [

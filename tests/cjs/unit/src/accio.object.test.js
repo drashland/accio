@@ -1,4 +1,4 @@
-const { accio, FieldTypes } = require("../../../../lib/cjs/accio");
+const { accio, FieldTypes } = require("../../../../lib/cjs/src/accio");
 
 const data = JSON.stringify({
   objects: {
