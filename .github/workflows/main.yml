@@ -72,7 +72,7 @@ jobs:
         uses: denoland/setup-deno@v1
 
       - name: Lint
-        run: deno lint
+        run: deno lint --ignore=node_modules,lib
 
       - name: Formatter
         run: deno fmt --check
