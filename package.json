@@ -13,7 +13,6 @@
     "build:conversion-workspace": "deno run --allow-read --allow-write ./console/build_esm_lib.ts",
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:esm-lib": "deno run --allow-read --allow-write --reload https://raw.githubusercontent.com/drashland/services/v0.2.7/builders/lib_builder/src/build_esm_lib.ts ./src --workspace=./tmp/conversion_workspace --debug",
-    "build:windows": "bash console/build_esm_lib ./src ./mod.ts --workspace=./tmp/conversion_workspace --debug && yarn && yarn build:cjs && yarn build:esm",
     "release": "yarn publish --access public",
     "test": "yarn test:deno && yarn test:cjs && yarn test:esm",
     "test:cjs": "yarn jest tests/cjs/",
