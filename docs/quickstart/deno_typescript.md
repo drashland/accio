@@ -1,48 +1,50 @@
 # Quickstart: Deno - TypeScript
 
-1. Create your `data.json` file. You can copy the [`example_data.json`](../../example_data.json) file from this repository.
+1. Create your `data.json` file. You can copy the
+   [`example_data.json`](../../example_data.json) file from this repository.
 
 2. Create your `app.ts` file.
 
-    ```typescript
-    import { accio } from "https://unpkg.com/@drashland/accio@1.2.0/lib/deno/accio.ts";
-    const decoder = new TextDecoder();
-    
-    const data = decoder.decode(Deno.readFileSync("./data.json"));
-    
-    const result = accio(data)
-      .array("versions")       // Target the array named "versions"
-      .findOne({               // In the array, find one object that has a name field ...
-        name: "v0.0.3",        // ... with the value of "v0.0.3"
-      })
-      .array("release_notes")  // In the object, target the array named "release_notes"
-      .findOne({               // In the array, find one object that has a title field ...
-        title: "Bug Fixes",    // ... with the value of "Bug Fixes"
-      })
-      .array("body")           // In the object, target the array named "body"
-      .first()                 // Target the first object in the array
+   ```typescript
+   import { accio } from "https://unpkg.com/@drashland/accio@1.2.0/lib/deno/accio.ts";
+   const decoder = new TextDecoder();
 
-    // Create the typing for the result
-    type SomeType = {
-      type: string;
-      text: string;
-    };
+   const data = decoder.decode(Deno.readFileSync("./data.json"));
 
-    // Use the `.get()` call and pass in the typing to get a typed result
-    const typedResult = result.get<SomeType>();
-    
-    console.log(typedResult.type);
-    console.log(typedResult.text);
-    ```
+   const result = accio(data)
+     .array("versions") // Target the array named "versions"
+     .findOne({ // In the array, find one object that has a name field ...
+       name: "v0.0.3", // ... with the value of "v0.0.3"
+     })
+     .array("release_notes") // In the object, target the array named "release_notes"
+     .findOne({ // In the array, find one object that has a title field ...
+       title: "Bug Fixes", // ... with the value of "Bug Fixes"
+     })
+     .array("body") // In the object, target the array named "body"
+     .first(); // Target the first object in the array
 
-5. Run your `app.ts` file.
+   // Create the typing for the result
+   type SomeType = {
+     type: string;
+     text: string;
+   };
 
-    ```
-    $ deno run --allow-read app.ts
-    ```
+   // Use the `.get()` call and pass in the typing to get a typed result
+   const typedResult = result.get<SomeType>();
 
-    You should see the following:
+   console.log(typedResult.type);
+   console.log(typedResult.text);
+   ```
 
-    ```
-    bullet
-    Fix issue with date objects not being correctly validated.
+3. Run your `app.ts` file.
+
+   ```
+   $ deno run --allow-read app.ts
+   ```
+
+   You should see the following:
+
+   ```
+   bullet
+   Fix issue with date objects not being correctly validated.
+   ```
